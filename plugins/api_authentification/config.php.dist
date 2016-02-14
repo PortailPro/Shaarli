@@ -1,0 +1,4 @@
+<?php
+
+$GLOBALS['plugins']['API_AUTHENTIFICATION_TOKEN'] = ''; // must be a strong key
+$GLOBALS['plugins']['API_AUTHENTIFICATION_KEY'] = ''; // must be a strong key

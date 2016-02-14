@@ -1,0 +1,2 @@
+description="Allow to authenticate user via API Header Token"
+parameters="API_AUTHENTIFICATION_TOKEN;API_AUTHENTIFICATION_KEY"
