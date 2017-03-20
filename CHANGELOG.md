@@ -11,8 +11,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- REST API: see [Shaarli API documentation](http://shaarli.github.io/api-documentation/)
-
 ### Changed
 
 ### Fixed

@@ -175,6 +175,7 @@ define('STAY_SIGNED_IN_TOKEN', sha1($conf->get('credentials.hash') . $_SERVER['R
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
     autoLocale($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 }
+header('Content-Type: text/html; charset=utf-8'); // We use UTF-8 for proper international characters handling.
 
 /**
  * Checking session state (i.e. is the user still logged in)
@@ -730,10 +731,17 @@ function showLinkList($PAGE, $LINKSDB, $conf, $pluginManager) {
  *
  * @param ConfigManager $conf          Configuration Manager instance.
  * @param PluginManager $pluginManager Plugin Manager instance,
- * @param LinkDB        $LINKSDB
  */
-function renderPage($conf, $pluginManager, $LINKSDB)
+function renderPage($conf, $pluginManager)
 {
+    $LINKSDB = new LinkDB(
+        $conf->get('resource.datastore'),
+        isLoggedIn(),
+        $conf->get('privacy.hide_public_links'),
+        $conf->get('redirector.url'),
+        $conf->get('redirector.encode_url')
+    );
+
     $updater = new Updater(
         read_updates_file($conf->get('resource.updates')),
         $LINKSDB,
@@ -930,7 +938,7 @@ function renderPage($conf, $pluginManager, $LINKSDB)
         exit;
     }
 
-    // Display opensearch plugin (XML)
+    // Display openseach plugin (XML)
     if ($targetPage == Router::$PAGE_OPENSEARCH) {
         header('Content-Type: application/xml; charset=utf-8');
         $PAGE->assign('serverurl', index_url($_SERVER));
@@ -2218,32 +2226,4 @@ if (isset($_SERVER['QUERY_STRING']) && startsWith($_SERVER['QUERY_STRING'], 'do=
 if (!isset($_SESSION['LINKS_PER_PAGE'])) {
     $_SESSION['LINKS_PER_PAGE'] = $conf->get('general.links_per_page', 20);
 }
-
-$linkDb = new LinkDB(
-    $conf->get('resource.datastore'),
-    isLoggedIn(),
-    $conf->get('privacy.hide_public_links'),
-    $conf->get('redirector.url'),
-    $conf->get('redirector.encode_url')
-);
-
-$container = new \Slim\Container();
-$container['conf'] = $conf;
-$container['plugins'] = $pluginManager;
-$app = new \Slim\App($container);
-
-// REST API routes
-$app->group('/api/v1', function() {
-    $this->get('/info', '\Api\Controllers\Info:getInfo');
-})->add('\Api\ApiMiddleware');
-
-$response = $app->run(true);
-// Hack to make Slim and Shaarli router work together:
-// If a Slim route isn't found, we call renderPage().
-if ($response->getStatusCode() == 404) {
-    // We use UTF-8 for proper international characters handling.
-    header('Content-Type: text/html; charset=utf-8');
-    renderPage($conf, $pluginManager, $linkDb);
-} else {
-    $app->respond($response);
-}
+renderPage($conf, $pluginManager);
