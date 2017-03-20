@@ -14,7 +14,7 @@ interface ConfigIO
      *
      * @return array All configuration in an array.
      */
-    public function read($filepath);
+    function read($filepath);
 
     /**
      * Write configuration.
@@ -22,12 +22,12 @@ interface ConfigIO
      * @param string $filepath Config file absolute path.
      * @param array  $conf   All configuration in an array.
      */
-    public function write($filepath, $conf);
+    function write($filepath, $conf);
 
     /**
      * Get config file extension according to config type.
      *
      * @return string Config file extension.
      */
-    public function getExtension();
+    function getExtension();
 }

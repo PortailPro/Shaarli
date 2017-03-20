@@ -12,7 +12,7 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
     /**
      * Reset plugin path
      */
-    public function setUp()
+    function setUp()
     {
         PluginManager::$PLUGINS_PATH = 'plugins';
     }
@@ -20,7 +20,7 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
     /**
      * Test Isso init without errors.
      */
-    public function testWallabagInitNoError()
+    function testWallabagInitNoError()
     {
         $conf = new ConfigManager('');
         $conf->set('plugins.ISSO_SERVER', 'value');
@@ -31,7 +31,7 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
     /**
      * Test Isso init with errors.
      */
-    public function testWallabagInitError()
+    function testWallabagInitError()
     {
         $conf = new ConfigManager('');
         $errors = isso_init($conf);
@@ -41,7 +41,7 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
     /**
      * Test render_linklist hook with valid settings to display the comment form.
      */
-    public function testIssoDisplayed()
+    function testIssoDisplayed()
     {
         $conf = new ConfigManager('');
         $conf->set('plugins.ISSO_SERVER', 'value');
@@ -81,7 +81,7 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
     /**
      * Test isso plugin when multiple links are displayed (shouldn't be displayed).
      */
-    public function testIssoMultipleLinks()
+    function testIssoMultipleLinks()
     {
         $conf = new ConfigManager('');
         $conf->set('plugins.ISSO_SERVER', 'value');
@@ -113,7 +113,7 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
     /**
      * Test isso plugin when using search (shouldn't be displayed).
      */
-    public function testIssoNotDisplayedWhenSearch()
+    function testIssoNotDisplayedWhenSearch()
     {
         $conf = new ConfigManager('');
         $conf->set('plugins.ISSO_SERVER', 'value');
@@ -141,7 +141,7 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
     /**
      * Test isso plugin without server configuration (shouldn't be displayed).
      */
-    public function testIssoWithoutConf()
+    function testIssoWithoutConf()
     {
         $data = 'abc';
         $conf = new ConfigManager('');

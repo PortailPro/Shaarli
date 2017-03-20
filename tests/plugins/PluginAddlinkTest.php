@@ -16,7 +16,7 @@ class PluginAddlinkTest extends PHPUnit_Framework_TestCase
     /**
      * Reset plugin path.
      */
-    public function setUp()
+    function setUp()
     {
         PluginManager::$PLUGINS_PATH = 'plugins';
     }
@@ -24,7 +24,7 @@ class PluginAddlinkTest extends PHPUnit_Framework_TestCase
     /**
      * Test render_header hook while logged in.
      */
-    public function testAddlinkHeaderLoggedIn()
+    function testAddlinkHeaderLoggedIn()
     {
         $str = 'stuff';
         $data = array($str => $str);
@@ -46,7 +46,7 @@ class PluginAddlinkTest extends PHPUnit_Framework_TestCase
     /**
      * Test render_header hook while logged out.
      */
-    public function testAddlinkHeaderLoggedOut()
+    function testAddlinkHeaderLoggedOut()
     {
         $str = 'stuff';
         $data = array($str => $str);
@@ -61,7 +61,7 @@ class PluginAddlinkTest extends PHPUnit_Framework_TestCase
     /**
      * Test render_includes hook while logged in.
      */
-    public function testAddlinkIncludesLoggedIn()
+    function testAddlinkIncludesLoggedIn()
     {
         $str = 'stuff';
         $data = array($str => $str);
@@ -86,7 +86,7 @@ class PluginAddlinkTest extends PHPUnit_Framework_TestCase
      * Test render_includes hook.
      * Should not affect css files while logged out.
      */
-    public function testAddlinkIncludesLoggedOut()
+    function testAddlinkIncludesLoggedOut()
     {
         $str = 'stuff';
         $data = array($str => $str);

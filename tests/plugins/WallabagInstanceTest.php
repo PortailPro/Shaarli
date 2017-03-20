@@ -15,7 +15,7 @@ class WallabagInstanceTest extends PHPUnit_Framework_TestCase
     /**
      * Reset plugin path
      */
-    public function setUp()
+    function setUp()
     {
         $this->instance = 'http://some.url';
     }
@@ -23,7 +23,7 @@ class WallabagInstanceTest extends PHPUnit_Framework_TestCase
     /**
      * Test WallabagInstance with API V1.
      */
-    public function testWallabagInstanceV1()
+    function testWallabagInstanceV1()
     {
         $instance = new WallabagInstance($this->instance, 1);
         $expected = $this->instance . '/?plainurl=';
@@ -34,7 +34,7 @@ class WallabagInstanceTest extends PHPUnit_Framework_TestCase
     /**
      * Test WallabagInstance with API V2.
      */
-    public function testWallabagInstanceV2()
+    function testWallabagInstanceV2()
     {
         $instance = new WallabagInstance($this->instance, 2);
         $expected = $this->instance . '/bookmarklet?url=';
@@ -45,7 +45,7 @@ class WallabagInstanceTest extends PHPUnit_Framework_TestCase
     /**
      * Test WallabagInstance with an invalid API version.
      */
-    public function testWallabagInstanceInvalidVersion()
+    function testWallabagInstanceInvalidVersion()
     {
         $instance = new WallabagInstance($this->instance, false);
         $expected = $this->instance . '/?plainurl=';
