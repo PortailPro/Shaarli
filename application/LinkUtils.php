@@ -89,9 +89,7 @@ function count_private($links)
 {
     $cpt = 0;
     foreach ($links as $link) {
-        if ($link['private']) {
-            $cpt += 1;
-        }
+        $cpt = $link['private'] == true ? $cpt + 1 : $cpt;
     }
 
     return $cpt;
