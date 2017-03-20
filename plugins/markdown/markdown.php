@@ -173,10 +173,7 @@ function process_markdown($description)
         ->setBreaksEnabled(true)
         ->text($processedDescription);
     $processedDescription = sanitize_html($processedDescription);
-
-    if(!empty($processedDescription)){
-        $processedDescription = '<div class="markdown">'. $processedDescription . '</div>';
-    }
+    $processedDescription = '<div class="markdown">'. $processedDescription . '</div>';
 
     return $processedDescription;
 }
