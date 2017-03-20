@@ -19,7 +19,7 @@ class ReferenceLinkDB
             'Richard Stallman and the Free Software Revolution',
             0,
             '20150310_114633',
-            'free gnu software stallman -exclude'
+            'free gnu software stallman'
         );
 
         $this->addLink(
