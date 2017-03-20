@@ -2237,7 +2237,6 @@ $app = new \Slim\App($container);
 // REST API routes
 $app->group('/api/v1', function() {
     $this->get('/info', '\Shaarli\Api\Controllers\Info:getInfo');
-    $this->get('/links', '\Shaarli\Api\Controllers\Links:getLinks');
 })->add('\Shaarli\Api\ApiMiddleware');
 
 $response = $app->run(true);
