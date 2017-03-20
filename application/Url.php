@@ -240,7 +240,7 @@ class Url
      *
      * @return string converted cleaned up URL.
      */
-    public function idnToAscii()
+    public function indToAscii()
     {
         $out = $this->cleanup();
         if (! function_exists('idn_to_ascii') || ! isset($this->parts['host'])) {
