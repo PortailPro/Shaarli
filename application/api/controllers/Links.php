@@ -34,14 +34,15 @@ class Links extends ApiController
      */
     public function getLinks($request, $response)
     {
-        $private = $request->getParam('visibility');
+        $private = $request->getParam('private');
         $links = $this->linkDb->filterSearch(
             [
                 'searchtags' => $request->getParam('searchtags', ''),
                 'searchterm' => $request->getParam('searchterm', ''),
             ],
             false,
-            $private
+            // to updated in another PR depending on the API doc
+            ($private === 'true' || $private === '1') ? 'private' : 'all'
         );
 
         // Return links from the {offset}th link, starting from 0.
