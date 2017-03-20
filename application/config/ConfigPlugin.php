@@ -80,13 +80,9 @@ function validate_plugin_order($formData)
 }
 
 /**
- * Affect plugin parameters values from the ConfigManager into plugins array.
+ * Affect plugin parameters values into plugins array.
  *
- * @param mixed $plugins Plugins array:
- *                         $plugins[<plugin_name>]['parameters'][<param_name>] = [
- *                                                                                 'value' => <value>,
- *                                                                                 'desc' => <description>
- *                                                                               ]
+ * @param mixed $plugins Plugins array ($plugins[<plugin_name>]['parameters']['param_name'] = <value>.
  * @param mixed $conf  Plugins configuration.
  *
  * @return mixed Updated $plugins array.
@@ -101,7 +97,7 @@ function load_plugin_parameter_values($plugins, $conf)
 
         foreach ($plugin['parameters'] as $key => $param) {
             if (!empty($conf[$key])) {
-                $out[$name]['parameters'][$key]['value'] = $conf[$key];
+                $out[$name]['parameters'][$key] = $conf[$key];
             }
         }
     }
