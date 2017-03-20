@@ -23,12 +23,7 @@ class UtilsTest extends PHPUnit_Framework_TestCase
 
     // Expected log date format
     protected static $dateFormat = 'Y/m/d H:i:s';
-
-    /**
-     * @var string Save the current timezone.
-     */
-    protected static $defaultTimeZone;
-
+    
 
     /**
      * Assign reference data
@@ -36,17 +31,6 @@ class UtilsTest extends PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         self::$sidHashes = ReferenceSessionIdHashes::getHashes();
-        self::$defaultTimeZone = date_default_timezone_get();
-        // Timezone without DST for test consistency
-        date_default_timezone_set('Africa/Nairobi');
-    }
-
-    /**
-     * Reset the timezone
-     */
-    public static function tearDownAfterClass()
-    {
-        date_default_timezone_set(self::$defaultTimeZone);
     }
 
     /**
@@ -302,28 +286,20 @@ class UtilsTest extends PHPUnit_Framework_TestCase
     /**
      * Test arrays_combine
      */
-    public function testCartesianProductGenerator()
+    public function testArraysCombination()
     {
         $arr = [['ab', 'cd'], ['ef', 'gh'], ['ij', 'kl'], ['m']];
         $expected = [
-            ['ab', 'ef', 'ij', 'm'],
-            ['ab', 'ef', 'kl', 'm'],
-            ['ab', 'gh', 'ij', 'm'],
-            ['ab', 'gh', 'kl', 'm'],
-            ['cd', 'ef', 'ij', 'm'],
-            ['cd', 'ef', 'kl', 'm'],
-            ['cd', 'gh', 'ij', 'm'],
-            ['cd', 'gh', 'kl', 'm'],
+            'abefijm',
+            'cdefijm',
+            'abghijm',
+            'cdghijm',
+            'abefklm',
+            'cdefklm',
+            'abghklm',
+            'cdghklm',
         ];
-        $this->assertEquals($expected, iterator_to_array(cartesian_product_generator($arr)));
+        $this->assertEquals($expected, arrays_combination($arr));
     }
 
-    /**
-     * Test date_format() with invalid parameter.
-     */
-    public function testDateFormatInvalid()
-    {
-        $this->assertFalse(format_date([]));
-        $this->assertFalse(format_date(null));
-    }
 }

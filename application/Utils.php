@@ -225,46 +225,44 @@ function autoLocale($headerLocale)
             $encodings = ['utf8', 'UTF-8'];
             if (!empty($matches[2])) {
                 $second = [strtoupper($matches[2]), strtolower($matches[2])];
-                $attempts = cartesian_product_generator([$first, $separators, $second, ['.'], $encodings]);
+                $attempts = arrays_combination([$first, $separators, $second, ['.'], $encodings]);
             } else {
-                $attempts = cartesian_product_generator([$first, $separators, $first, ['.'], $encodings]);
+                $attempts = arrays_combination([$first, $separators, $first, ['.'], $encodings]);
             }
         }
     }
-    setlocale(LC_ALL, implode('implode', iterator_to_array($attempts)));
+    setlocale(LC_ALL, $attempts);
 }
 
 /**
- * Build a Generator object representing the cartesian product from given $items.
+ * Combine multiple arrays of string to get all possible strings.
+ * The order is important because this doesn't shuffle the entries.
  *
  * Example:
  *   [['a'], ['b', 'c']]
  * will generate:
- *   [
- *      ['a', 'b'],
- *      ['a', 'c'],
- *   ]
+ *   - ab
+ *   - ac
+ *
+ * TODO PHP 5.6: use the `...` operator instead of an array of array.
  *
  * @param array $items array of array of string
  *
- * @return Generator representing the cartesian product of given array.
- *
- * @see https://en.wikipedia.org/wiki/Cartesian_product
+ * @return array Combined string from the input array.
  */
-function cartesian_product_generator($items)
+function arrays_combination($items)
 {
-    if (empty($items)) {
-        yield [];
-    }
-    $subArray = array_pop($items);
-    if (empty($subArray)) {
-        return;
-    }
-    foreach (cartesian_product_generator($items) as $item) {
-        foreach ($subArray as $value) {
-            yield $item + [count($item) => $value];
+    $out = [''];
+    foreach ($items as $item) {
+        $add = [];
+        foreach ($item as $element) {
+            foreach ($out as $key => $existingEntry) {
+                $add[] = $existingEntry . $element;
+            }
         }
+        $out = $add;
     }
+    return $out;
 }
 
 /**
@@ -304,34 +302,4 @@ function generate_api_secret($username, $salt)
 function normalize_spaces($string)
 {
     return preg_replace('/\s{2,}/', ' ', trim($string));
-}
-
-/**
- * Format the date according to the locale.
- *
- * Requires php-intl to display international datetimes,
- * otherwise default format '%c' will be returned.
- *
- * @param DateTime $date to format.
- * @param bool     $intl Use international format if true.
- *
- * @return bool|string Formatted date, or false if the input is invalid.
- */
-function format_date($date, $intl = true)
-{
-    if (! $date instanceof DateTime) {
-        return false;
-    }
-
-    if (! $intl || ! class_exists('IntlDateFormatter')) {
-        return strftime('%c', $date->getTimestamp());
-    }
-
-    $formatter = new IntlDateFormatter(
-        setlocale(LC_TIME, 0),
-        IntlDateFormatter::LONG,
-        IntlDateFormatter::LONG
-    );
-
-    return $formatter->format($date);
 }
