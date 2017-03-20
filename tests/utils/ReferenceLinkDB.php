@@ -30,8 +30,7 @@ class ReferenceLinkDB
             'Richard Stallman and the Free Software Revolution. Read this. #hashtag',
             0,
             '20150310_114633',
-            'free gnu software stallman -exclude stuff hashtag',
-            '20160803_093033'
+            'free gnu software stallman -exclude stuff hashtag'
         );
 
         $this->addLink(
@@ -83,7 +82,7 @@ class ReferenceLinkDB
     /**
      * Adds a new link
      */
-    protected function addLink($title, $url, $description, $private, $date, $tags, $updated = '')
+    protected function addLink($title, $url, $description, $private, $date, $tags)
     {
         $link = array(
             'title' => $title,
@@ -92,7 +91,6 @@ class ReferenceLinkDB
             'private' => $private,
             'linkdate' => $date,
             'tags' => $tags,
-            'updated' => $updated,
         );
         $this->_links[$date] = $link;
 

@@ -27,8 +27,7 @@
       {/if}
       <id>{$value.guid}</id>
       {if="$show_dates"}
-        <published>{$value.pub_iso_date}</published>
-        <updated>{$value.up_iso_date}</updated>
+        <updated>{$value.iso_date}</updated>
       {/if}
       <content type="html" xml:lang="{$language}">
         <![CDATA[{$value.description}]]>
