@@ -1676,7 +1676,10 @@ function buildLinkList($PAGE,$LINKSDB, $conf, $pluginManager)
         $keys[] = $key;
     }
 
-
+    // If there is only a single link, we change on-the-fly the title of the page.
+    if (count($linksToDisplay) == 1) {
+        $conf->set('pagetitle', $linksToDisplay[$keys[0]]['title'] .' - '. $conf->get('general.title'));
+    }
 
     // Select articles according to paging.
     $pagecount = ceil(count($keys) / $_SESSION['LINKS_PER_PAGE']);
@@ -1738,10 +1741,9 @@ function buildLinkList($PAGE,$LINKSDB, $conf, $pluginManager)
         'links' => $linkDisp,
         'tags' => $LINKSDB->allTags(),
     );
-
-    // If there is only a single link, we change on-the-fly the title of the page.
-    if (count($linksToDisplay) == 1) {
-        $data['pagetitle'] = $linksToDisplay[$keys[0]]['title'] .' - '. $conf->get('general.title');
+    // FIXME! temporary fix - see #399.
+    if ($conf->exists('pagetitle') && count($linkDisp) == 1) {
+        $data['pagetitle'] = $conf->get('pagetitle');
     }
 
     $pluginManager->executeHooks('render_linklist', $data, array('loggedin' => isLoggedIn()));
