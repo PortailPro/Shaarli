@@ -20,35 +20,26 @@ The directory structure should look like:
      |--- markdown.css
      |--- markdown.meta
      |--- markdown.php
+     |--- Parsedown.php
      |--- README.md
 ```
 
 To enable the plugin, just check it in the plugin administration page.
 
-You can also add `markdown` to your list of enabled plugins in `data/config.json.php`
-(`general.enabled_plugins` list).
+You can also add `markdown` to your list of enabled plugins in `data/config.php`
+(`ENABLED_PLUGINS` array).
 
 This should look like:
 
 ```
-"general": {
-  "enabled_plugins": [
-    "markdown",
-    [...]
-  ],
-}
+$GLOBALS['config']['ENABLED_PLUGINS'] = array('qrcode', 'any_other_plugin', 'markdown')
 ```
-
-Parsedown parsing library is imported using Composer. If you installed Shaarli using `git`,
-or the `master` branch, run
-
-    composer update --no-dev --prefer-dist
 
 ### No Markdown tag
 
-If the tag `nomarkdown` is set for a shaare, it won't be converted to Markdown syntax.
+If the tag `.nomarkdown` is set for a shaare, it won't be converted to Markdown syntax.
  
-> Note: this is a special tag, so it won't be displayed in link list.
+> Note: it's a private tag (leading dot), so it won't be displayed to visitors.
 
 ### Known issue
 

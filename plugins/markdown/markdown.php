@@ -22,7 +22,7 @@ function hook_markdown_render_linklist($data)
 {
     foreach ($data['links'] as &$value) {
         if (!empty($value['tags']) && noMarkdownTag($value['tags'])) {
-            $value = stripNoMarkdownTag($value);
+            $value['taglist'] = stripNoMarkdownTag($value['taglist']);
             continue;
         }
         $value['description'] = process_markdown($value['description']);
@@ -41,7 +41,7 @@ function hook_markdown_render_feed($data)
 {
     foreach ($data['links'] as &$value) {
         if (!empty($value['tags']) && noMarkdownTag($value['tags'])) {
-            $value = stripNoMarkdownTag($value);
+            $value['tags'] = stripNoMarkdownTag($value['tags']);
             continue;
         }
         $value['description'] = process_markdown($value['description']);
@@ -63,7 +63,6 @@ function hook_markdown_render_daily($data)
     foreach ($data['cols'] as &$value) {
         foreach ($value as &$value2) {
             if (!empty($value2['tags']) && noMarkdownTag($value2['tags'])) {
-                $value2 = stripNoMarkdownTag($value2);
                 continue;
             }
             $value2['formatedDescription'] = process_markdown($value2['formatedDescription']);
@@ -82,30 +81,20 @@ function hook_markdown_render_daily($data)
  */
 function noMarkdownTag($tags)
 {
-    return preg_match('/(^|\s)'. NO_MD_TAG .'(\s|$)/', $tags);
+    return strpos($tags, NO_MD_TAG) !== false;
 }
 
 /**
  * Remove the no-markdown meta tag so it won't be displayed.
  *
- * @param array $link Link data.
+ * @param string $tags Tag list.
  *
- * @return array Updated link without no markdown tag.
+ * @return string tag list without no markdown tag.
  */
-function stripNoMarkdownTag($link)
+function stripNoMarkdownTag($tags)
 {
-    if (! empty($link['taglist'])) {
-        $offset = array_search(NO_MD_TAG, $link['taglist']);
-        if ($offset !== false) {
-            unset($link['taglist'][$offset]);
-        }
-    }
-
-    if (!empty($link['tags'])) {
-        str_replace(NO_MD_TAG, '', $link['tags']);
-    }
-
-    return $link;
+    unset($tags[array_search(NO_MD_TAG, $tags)]);
+    return array_values($tags);
 }
 
 /**
