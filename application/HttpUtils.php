@@ -297,17 +297,9 @@ function server_url($server)
             // Keep forwarded port
             if (strpos($server['HTTP_X_FORWARDED_PORT'], ',') !== false) {
                 $ports = explode(',', $server['HTTP_X_FORWARDED_PORT']);
-                $port = trim($ports[0]);
+                $port = ':' . trim($ports[0]);
             } else {
-                $port = $server['HTTP_X_FORWARDED_PORT'];
-            }
-
-            if (($scheme == 'http' && $port != '80')
-                || ($scheme == 'https' && $port != '443')
-            ) {
-                $port = ':' . $port;
-            } else {
-                $port = '';
+                $port = ':' . $server['HTTP_X_FORWARDED_PORT'];
             }
         }
 
