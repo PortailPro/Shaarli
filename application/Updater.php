@@ -1,6 +1,4 @@
 <?php
-use Shaarli\Config\ConfigJson;
-use Shaarli\Config\ConfigPhp;
 
 /**
  * Class Updater.

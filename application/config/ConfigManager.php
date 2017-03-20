@@ -1,5 +1,9 @@
 <?php
-namespace Shaarli\Config;
+
+// FIXME! Namespaces...
+require_once 'ConfigIO.php';
+require_once 'ConfigJson.php';
+require_once 'ConfigPhp.php';
 
 /**
  * Class ConfigManager
@@ -120,12 +124,12 @@ class ConfigManager
      * @param bool   $write      Write the new setting in the config file, default false.
      * @param bool   $isLoggedIn User login state, default false.
      *
-     * @throws \Exception Invalid
+     * @throws Exception Invalid
      */
     public function set($setting, $value, $write = false, $isLoggedIn = false)
     {
         if (empty($setting) || ! is_string($setting)) {
-            throw new \Exception('Invalid setting key parameter. String expected, got: '. gettype($setting));
+            throw new Exception('Invalid setting key parameter. String expected, got: '. gettype($setting));
         }
 
         // During the ConfigIO transition, map legacy settings to the new ones.
@@ -173,7 +177,7 @@ class ConfigManager
      *
      * @throws MissingFieldConfigException: a mandatory field has not been provided in $conf.
      * @throws UnauthorizedConfigException: user is not authorize to change configuration.
-     * @throws \IOException: an error occurred while writing the new config file.
+     * @throws IOException: an error occurred while writing the new config file.
      */
     public function write($isLoggedIn)
     {
@@ -362,7 +366,7 @@ class ConfigManager
 /**
  * Exception used if a mandatory field is missing in given configuration.
  */
-class MissingFieldConfigException extends \Exception
+class MissingFieldConfigException extends Exception
 {
     public $field;
 
@@ -381,7 +385,7 @@ class MissingFieldConfigException extends \Exception
 /**
  * Exception used if an unauthorized attempt to edit configuration has been made.
  */
-class UnauthorizedConfigException extends \Exception
+class UnauthorizedConfigException extends Exception
 {
     /**
      * Construct exception.

@@ -1,7 +1,6 @@
 <?php
-namespace Shaarli\Api\Controllers;
 
-use Shaarli\Config\ConfigManager;
+namespace Shaarli\Api\Controllers;
 
 use Slim\Container;
 use Slim\Http\Environment;
@@ -23,7 +22,7 @@ class InfoTest extends \PHPUnit_Framework_TestCase
     protected static $testDatastore = 'sandbox/datastore.php';
 
     /**
-     * @var ConfigManager instance
+     * @var \ConfigManager instance
      */
     protected $conf;
 
@@ -47,7 +46,7 @@ class InfoTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->conf = new ConfigManager('tests/utils/config/configJson.json.php');
+        $this->conf = new \ConfigManager('tests/utils/config/configJson.json.php');
         $this->refDB = new \ReferenceLinkDB();
         $this->refDB->write(self::$testDatastore);
 
@@ -85,7 +84,7 @@ class InfoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Shaarli', $data['settings']['title']);
         $this->assertEquals('?', $data['settings']['header_link']);
         $this->assertEquals('UTC', $data['settings']['timezone']);
-        $this->assertEquals(ConfigManager::$DEFAULT_PLUGINS, $data['settings']['enabled_plugins']);
+        $this->assertEquals(\ConfigManager::$DEFAULT_PLUGINS, $data['settings']['enabled_plugins']);
         $this->assertEquals(false, $data['settings']['default_private_links']);
 
         $title = 'My links';

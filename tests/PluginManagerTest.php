@@ -1,5 +1,4 @@
 <?php
-use Shaarli\Config\ConfigManager;
 
 /**
  * Plugin Manager tests

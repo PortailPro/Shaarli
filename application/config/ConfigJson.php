@@ -1,5 +1,4 @@
 <?php
-namespace Shaarli\Config;
 
 /**
  * Class ConfigJson (ConfigIO implementation)
@@ -22,7 +21,7 @@ class ConfigJson implements ConfigIO
         $data = json_decode($data, true);
         if ($data === null) {
             $error = json_last_error();
-            throw new \Exception('An error occurred while parsing JSON file: error code #'. $error);
+            throw new Exception('An error occurred while parsing JSON file: error code #'. $error);
         }
         return $data;
     }
@@ -36,7 +35,7 @@ class ConfigJson implements ConfigIO
         $print = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 0;
         $data = self::getPhpHeaders() . json_encode($conf, $print) . self::getPhpSuffix();
         if (!file_put_contents($filepath, $data)) {
-            throw new \IOException(
+            throw new IOException(
                 $filepath,
                 'Shaarli could not create the config file.
                 Please make sure Shaarli has the right to write in the folder is it installed in.'

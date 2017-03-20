@@ -1,5 +1,4 @@
 <?php
-namespace Shaarli\Config;
 
 /**
  * Unit tests for Class ConfigManagerTest
@@ -7,7 +6,7 @@ namespace Shaarli\Config;
  * Note: it only test the manager with ConfigJson,
  *  ConfigPhp is only a workaround to handle the transition to JSON type.
  */
-class ConfigManagerTest extends \PHPUnit_Framework_TestCase
+class ConfigManagerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var ConfigManager
@@ -84,7 +83,7 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * Set with an empty key.
      *
-     * @expectedException \Exception
+     * @expectedException Exception
      * @expectedExceptionMessageRegExp #^Invalid setting key parameter. String expected, got.*#
      */
     public function testSetEmptyKey()
@@ -95,7 +94,7 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * Set with an array key.
      *
-     * @expectedException \Exception
+     * @expectedException Exception
      * @expectedExceptionMessageRegExp #^Invalid setting key parameter. String expected, got.*#
      */
     public function testSetArrayKey()
@@ -106,7 +105,7 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * Try to write the config without mandatory parameter (e.g. 'login').
      *
-     * @expectedException Shaarli\Config\MissingFieldConfigException
+     * @expectedException MissingFieldConfigException
      */
     public function testWriteMissingParameter()
     {

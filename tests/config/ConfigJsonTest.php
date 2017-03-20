@@ -1,10 +1,11 @@
 <?php
-namespace Shaarli\Config;
+
+require_once 'application/config/ConfigJson.php';
 
 /**
  * Class ConfigJsonTest
  */
-class ConfigJsonTest extends \PHPUnit_Framework_TestCase
+class ConfigJsonTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var ConfigJson
@@ -39,7 +40,7 @@ class ConfigJsonTest extends \PHPUnit_Framework_TestCase
     /**
      * Read a non existent config file -> empty array.
      *
-     * @expectedException \Exception
+     * @expectedException Exception
      * @expectedExceptionMessage An error occurred while parsing JSON file: error code #4
      */
     public function testReadInvalidJson()
@@ -111,7 +112,7 @@ class ConfigJsonTest extends \PHPUnit_Framework_TestCase
     /**
      * Write to invalid path.
      *
-     * @expectedException \IOException
+     * @expectedException IOException
      */
     public function testWriteInvalidArray()
     {
@@ -122,7 +123,7 @@ class ConfigJsonTest extends \PHPUnit_Framework_TestCase
     /**
      * Write to invalid path.
      *
-     * @expectedException \IOException
+     * @expectedException IOException
      */
     public function testWriteInvalidBlank()
     {
