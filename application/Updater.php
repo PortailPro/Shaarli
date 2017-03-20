@@ -1,7 +1,6 @@
 <?php
 use Shaarli\Config\ConfigJson;
 use Shaarli\Config\ConfigPhp;
-use Shaarli\Config\ConfigManager;
 
 /**
  * Class Updater.
@@ -362,22 +361,6 @@ class Updater
         }
         $this->conf->write($this->isLoggedIn);
 
-        return true;
-    }
-
-    /**
-     * Add 'http://' to Piwik URL the setting is set.
-     *
-     * @return bool true if the update is successful, false otherwise.
-     */
-    public function updateMethodPiwikUrl()
-    {
-        if (! $this->conf->exists('plugins.PIWIK_URL') || startsWith($this->conf->get('plugins.PIWIK_URL'), 'http')) {
-            return true;
-        }
-
-        $this->conf->set('plugins.PIWIK_URL', 'http://'. $this->conf->get('plugins.PIWIK_URL'));
-        $this->conf->write($this->isLoggedIn);
         return true;
     }
 }
