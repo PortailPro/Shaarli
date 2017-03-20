@@ -32,10 +32,6 @@ function logm($logFile, $clientIp, $message)
  *
  *  In Shaarli, they are used as a tinyurl-like link to individual entries,
  *  e.g. smallHash('20111006_131924') --> yZH23w
- *
- * @param string $text Create a hash from this text.
- *
- * @return string generated small hash.
  */
 function smallHash($text)
 {
@@ -110,9 +106,7 @@ function unescape($str)
 }
 
 /**
- * Sanitize link before rendering.
- *
- * @param array $link Link to escape.
+ * Link sanitization before templating
  */
 function sanitizeLink(&$link)
 {

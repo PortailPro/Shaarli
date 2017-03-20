@@ -7,9 +7,9 @@
  * Example: preselect Europe/Paris
  *  list($htmlform, $js) = generateTimeZoneForm('Europe/Paris');
  *
- * @param string $preselectedTimezone preselected timezone (optional)
+ * @param string $preselected_timezone preselected timezone (optional)
  *
- * @return array containing the generated HTML form and Javascript code
+ * @return an array containing the generated HTML form and Javascript code
  **/
 function generateTimeZoneForm($preselectedTimezone='')
 {
@@ -26,6 +26,10 @@ function generateTimeZoneForm($preselectedTimezone='')
         $pcontinent = substr($preselectedTimezone, 0, $spos);
         $pcity = substr($preselectedTimezone, $spos+1);
     }
+
+    // Display config form:
+    $timezoneForm = '';
+    $timezoneJs = '';
 
     // The list is in the form 'Europe/Paris', 'America/Argentina/Buenos_Aires'
     // We split the list in continents/cities.
@@ -93,7 +97,7 @@ function generateTimeZoneForm($preselectedTimezone='')
  * @param string $continent the timezone continent
  * @param string $city      the timezone city
  *
- * @return bool whether continent/city is a valid timezone
+ * @return whether continent/city is a valid timezone
  */
 function isTimeZoneValid($continent, $city)
 {
