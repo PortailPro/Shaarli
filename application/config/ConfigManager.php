@@ -116,11 +116,6 @@ class ConfigManager
      */
     public function get($setting, $default = '')
     {
-        // During the ConfigIO transition, map legacy settings to the new ones.
-        if ($this->configIO instanceof ConfigPhp && isset(ConfigPhp::$LEGACY_KEYS_MAPPING[$setting])) {
-            $setting = ConfigPhp::$LEGACY_KEYS_MAPPING[$setting];
-        }
-
         $settings = explode('.', $setting);
         $value = self::getConfig($settings, $this->loadedConfig);
         if ($value === self::$NOT_FOUND) {
@@ -147,11 +142,6 @@ class ConfigManager
             throw new Exception('Invalid setting key parameter. String expected, got: '. gettype($setting));
         }
 
-        // During the ConfigIO transition, map legacy settings to the new ones.
-        if ($this->configIO instanceof ConfigPhp && isset(ConfigPhp::$LEGACY_KEYS_MAPPING[$setting])) {
-            $setting = ConfigPhp::$LEGACY_KEYS_MAPPING[$setting];
-        }
-
         $settings = explode('.', $setting);
         self::setConfig($settings, $value, $this->loadedConfig);
         if ($write) {
@@ -170,11 +160,6 @@ class ConfigManager
      */
     public function exists($setting)
     {
-        // During the ConfigIO transition, map legacy settings to the new ones.
-        if ($this->configIO instanceof ConfigPhp && isset(ConfigPhp::$LEGACY_KEYS_MAPPING[$setting])) {
-            $setting = ConfigPhp::$LEGACY_KEYS_MAPPING[$setting];
-        }
-
         $settings = explode('.', $setting);
         $value = self::getConfig($settings, $this->loadedConfig);
         if ($value === self::$NOT_FOUND) {
@@ -198,15 +183,8 @@ class ConfigManager
     {
         // These fields are required in configuration.
         $mandatoryFields = array(
-            'credentials.login',
-            'credentials.hash',
-            'credentials.salt',
-            'security.session_protection_disabled',
-            'general.timezone',
-            'general.title',
-            'general.header_link',
-            'general.default_private_links',
-            'extras.redirector',
+            'login', 'hash', 'salt', 'timezone', 'title', 'titleLink',
+            'redirector', 'disablesessionprotection', 'privateLinkByDefault'
         );
 
         // Only logged in user can alter config.
@@ -287,78 +265,75 @@ class ConfigManager
     protected function setDefaultValues()
     {
         // Data subdirectory
-        $this->setEmpty('path.data_dir', 'data');
+        $this->setEmpty('config.DATADIR', 'data');
 
         // Main configuration file
-        $this->setEmpty('path.config', 'data/config.php');
+        $this->setEmpty('config.CONFIG_FILE', 'data/config.php');
 
         // Link datastore
-        $this->setEmpty('path.datastore', 'data/datastore.php');
+        $this->setEmpty('config.DATASTORE', 'data/datastore.php');
 
         // Banned IPs
-        $this->setEmpty('path.ban_file', 'data/ipbans.php');
+        $this->setEmpty('config.IPBANS_FILENAME', 'data/ipbans.php');
 
         // Processed updates file.
-        $this->setEmpty('path.updates', 'data/updates.txt');
+        $this->setEmpty('config.UPDATES_FILE', 'data/updates.txt');
 
         // Access log
-        $this->setEmpty('path.log', 'data/log.txt');
+        $this->setEmpty('config.LOG_FILE', 'data/log.txt');
 
         // For updates check of Shaarli
-        $this->setEmpty('path.update_check', 'data/lastupdatecheck.txt');
+        $this->setEmpty('config.UPDATECHECK_FILENAME', 'data/lastupdatecheck.txt');
 
         // Set ENABLE_UPDATECHECK to disabled by default.
-        $this->setEmpty('general.check_updates', false);
+        $this->setEmpty('config.ENABLE_UPDATECHECK', false);
 
         // RainTPL cache directory (keep the trailing slash!)
-        $this->setEmpty('path.raintpl_tmp', 'tmp/');
+        $this->setEmpty('config.RAINTPL_TMP', 'tmp/');
         // Raintpl template directory (keep the trailing slash!)
-        $this->setEmpty('path.raintpl_tpl', 'tpl/');
+        $this->setEmpty('config.RAINTPL_TPL', 'tpl/');
 
         // Thumbnail cache directory
-        $this->setEmpty('path.thumbnails_cache', 'cache');
+        $this->setEmpty('config.CACHEDIR', 'cache');
 
         // Atom & RSS feed cache directory
-        $this->setEmpty('path.page_cache', 'pagecache');
+        $this->setEmpty('config.PAGECACHE', 'pagecache');
 
         // Ban IP after this many failures
-        $this->setEmpty('security.ban_after', 4);
+        $this->setEmpty('config.BAN_AFTER', 4);
         // Ban duration for IP address after login failures (in seconds)
-        $this->setEmpty('security.ban_after', 1800);
+        $this->setEmpty('config.BAN_DURATION', 1800);
 
         // Feed options
         // Enable RSS permalinks by default.
         // This corresponds to the default behavior of shaarli before this was added as an option.
-        $this->setEmpty('general.rss_permalinks', true);
+        $this->setEmpty('config.ENABLE_RSS_PERMALINKS', true);
         // If true, an extra "ATOM feed" button will be displayed in the toolbar
-        $this->setEmpty('extras.show_atom', false);
+        $this->setEmpty('config.SHOW_ATOM', false);
 
         // Link display options
-        $this->setEmpty('extras.hide_public_links', false);
-        $this->setEmpty('extras.hide_timestamps', false);
-        $this->setEmpty('general.links_per_page', 20);
-
-        // Private checkbox is checked by default
-        $this->setEmpty('general.default_private_links', false);
+        $this->setEmpty('config.HIDE_PUBLIC_LINKS', false);
+        $this->setEmpty('config.HIDE_TIMESTAMPS', false);
+        $this->setEmpty('config.LINKS_PER_PAGE', 20);
 
         // Open Shaarli (true): anyone can add/edit/delete links without having to login
-        $this->setEmpty('extras.open_shaarli', false);
+        $this->setEmpty('config.OPEN_SHAARLI', false);
 
         // Thumbnails
         // Display thumbnails in links
-        $this->setEmpty('general.enable_thumbnails', true);
+        $this->setEmpty('config.ENABLE_THUMBNAILS', true);
         // Store thumbnails in a local cache
-        $this->setEmpty('general.enable_localcache', true);
+        $this->setEmpty('config.ENABLE_LOCALCACHE', true);
 
         // Update check frequency for Shaarli. 86400 seconds=24 hours
-        $this->setEmpty('general.check_updates_branch', 'stable');
-        $this->setEmpty('general.check_updates_interval', 86400);
+        $this->setEmpty('config.UPDATECHECK_BRANCH', 'stable');
+        $this->setEmpty('config.UPDATECHECK_INTERVAL', 86400);
 
-        $this->setEmpty('extras.redirector', '');
-        $this->setEmpty('extras.redirector_encode_url', true);
+        $this->setEmpty('redirector', '');
+        $this->setEmpty('config.REDIRECTOR_URLENCODE', true);
 
         // Enabled plugins.
-        $this->setEmpty('general.enabled_plugins', array('qrcode'));
+        $this->setEmpty('config.ENABLED_PLUGINS', array('qrcode'));
 
         // Initialize plugin parameters array.
         $this->setEmpty('plugins', array());
