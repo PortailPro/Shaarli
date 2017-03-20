@@ -290,9 +290,7 @@ class LinkDBTest extends PHPUnit_Framework_TestCase
                 'stallman' => 1,
                 'free' => 1,
                 '-exclude' => 1,
-                // The DB contains a link with `sTuff` and another one with `stuff` tag.
-                // They need to be grouped with the first case found (`sTuff`).
-                'sTuff' => 2,
+                'stuff' => 2,
             ),
             self::$publicLinkDB->allTags()
         );
@@ -312,7 +310,7 @@ class LinkDBTest extends PHPUnit_Framework_TestCase
                 'w3c' => 1,
                 'css' => 1,
                 'Mercurial' => 1,
-                'sTuff' => 2,
+                'stuff' => 2,
                 '-exclude' => 1,
                 '.hidden' => 1,
             ),
