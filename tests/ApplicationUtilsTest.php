@@ -75,12 +75,9 @@ class ApplicationUtilsTest extends PHPUnit_Framework_TestCase
      */
     public function testGetLatestGitVersionCodeInvalidUrl()
     {
-        $oldlog = ini_get('error_log');
-        ini_set('error_log', '/dev/null');
         $this->assertFalse(
             ApplicationUtils::getLatestGitVersionCode('htttp://null.io', 1)
         );
-        ini_set('error_log', $oldlog);
     }
 
     /**
