@@ -1054,7 +1054,7 @@ function renderPage()
             startsWith($query,'do='. $targetPage) && !isLoggedIn()
         );
         $cached = $cache->cachedVersion();
-        if (!empty($cached)) {
+        if (false && !empty($cached)) {
             echo $cached;
             exit;
         }
