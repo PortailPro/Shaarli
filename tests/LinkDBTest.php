@@ -278,7 +278,6 @@ class LinkDBTest extends PHPUnit_Framework_TestCase
                 'stallman' => 1,
                 'free' => 1,
                 '-exclude' => 1,
-                'stuff' => 2,
             ),
             self::$publicLinkDB->allTags()
         );

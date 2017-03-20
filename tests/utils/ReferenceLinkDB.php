@@ -16,19 +16,10 @@ class ReferenceLinkDB
         $this->addLink(
             'Free as in Freedom 2.0',
             'https://static.fsf.org/nosvn/faif-2.0.pdf',
-            'Richard Stallman and the Free Software Revolution. Read this.',
+            'Richard Stallman and the Free Software Revolution',
             0,
             '20150310_114633',
             'free gnu software stallman -exclude'
-        );
-
-        $this->addLink(
-            'Note:',
-            'local',
-            'Stallman has a beard and is part of the Free Software Foundation (or not). Seriously, read this.',
-            0,
-            '20150310_114651',
-            ''
         );
 
         $this->addLink(
