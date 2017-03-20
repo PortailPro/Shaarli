@@ -1528,7 +1528,7 @@ function renderPage($conf, $pluginManager, $LINKSDB)
             $_POST,
             $_FILES,
             $LINKSDB,
-            $conf
+            $conf->get('resource.page_cache')
         );
         echo '<script>alert("'.$status.'");document.location=\'?do='
              .Router::$PAGE_IMPORT .'\';</script>';
