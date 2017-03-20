@@ -98,7 +98,8 @@ class ApiMiddleware
      * @throws ApiAuthorizationException The token couldn't be validated.
      */
     protected function checkToken($request) {
-        if (! $request->hasHeader('Authorization')) {
+        $jwt = $request->getHeaderLine('jwt');
+        if (empty($jwt)) {
             throw new ApiAuthorizationException('JWT token not provided');
         }
 
@@ -106,13 +107,7 @@ class ApiMiddleware
             throw new ApiAuthorizationException('Token secret must be set in Shaarli\'s administration');
         }
 
-        $authorization = $request->getHeaderLine('Authorization');
-
-        if (! preg_match('/^Bearer (.*)/i', $authorization, $matches)) {
-            throw new ApiAuthorizationException('Invalid JWT header');
-        }
-
-        ApiUtils::validateJwtToken($matches[1], $this->conf->get('api.secret'));
+        ApiUtils::validateJwtToken($jwt, $this->conf->get('api.secret'));
     }
 
     /**

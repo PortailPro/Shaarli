@@ -143,7 +143,7 @@ class ApiMiddlewareTest extends \PHPUnit_Framework_TestCase
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/echo',
-            'HTTP_AUTHORIZATION'=> 'Bearer jwt',
+            'HTTP_JWT'=> 'jwt',
         ]);
         $request = Request::createFromEnvironment($env);
         $response = new Response();
@@ -157,30 +157,7 @@ class ApiMiddlewareTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Invoke the middleware with an invalid JWT token header
-     */
-    public function testInvalidJwtAuthHeaderDebug()
-    {
-        $this->conf->set('dev.debug', true);
-        $mw = new ApiMiddleware($this->container);
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/echo',
-            'HTTP_AUTHORIZATION'=> 'PolarBearer jwt',
-        ]);
-        $request = Request::createFromEnvironment($env);
-        $response = new Response();
-        /** @var Response $response */
-        $response = $mw($request, $response, null);
-
-        $this->assertEquals(401, $response->getStatusCode());
-        $body = json_decode((string) $response->getBody());
-        $this->assertEquals('Not authorized: Invalid JWT header', $body->message);
-        $this->assertContains('ApiAuthorizationException', $body->stacktrace);
-    }
-
-    /**
-     * Invoke the middleware with an invalid JWT token (debug):
+     * Invoke the middleware without an invalid JWT token (debug):
      * should return a 401 error Unauthorized - with a specific message and a stacktrace.
      *
      * Note: specific JWT errors tests are handled in ApiUtilsTest.
@@ -192,7 +169,7 @@ class ApiMiddlewareTest extends \PHPUnit_Framework_TestCase
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/echo',
-            'HTTP_AUTHORIZATION'=> 'Bearer jwt',
+            'HTTP_JWT'=> 'bad jwt',
         ]);
         $request = Request::createFromEnvironment($env);
         $response = new Response();
