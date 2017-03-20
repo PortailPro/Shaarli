@@ -100,18 +100,13 @@ class PluginMarkdownTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test sanitize_html().
+     * Test reset_quote_tags()
      */
-    function testSanitizeHtml() {
-        $input = '< script src="js.js"/>';
-        $input .= '< script attr>alert(\'xss\');</script>';
-        $input .= '<style> * { display: none }</style>';
-        $output = escape($input);
-        $input .= '<a href="#" onmouseHover="alert(\'xss\');" attr="tt">link</a>';
-        $output .= '<a href="#"  attr="tt">link</a>';
-        $this->assertEquals($output, sanitize_html($input));
-        // Do not touch escaped HTML.
-        $input = escape($input);
-        $this->assertEquals($input, sanitize_html($input));
+    function testResetQuoteTags()
+    {
+        $text = '> quote1'. PHP_EOL . ' > quote2 ' . PHP_EOL . 'noquote';
+        $processedText = escape($text);
+        $reversedText = reset_quote_tags($processedText);
+        $this->assertEquals($text, $reversedText);
     }
 }

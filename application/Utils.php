@@ -62,27 +62,11 @@ function endsWith($haystack, $needle, $case=true)
 }
 
 /**
- * Htmlspecialchars wrapper
- *
- * @param string $str the string to escape.
- *
- * @return string escaped.
+ * htmlspecialchars wrapper
  */
 function escape($str)
 {
     return htmlspecialchars($str, ENT_COMPAT, 'UTF-8', false);
-}
-
-/**
- * Reverse the escape function.
- *
- * @param string $str the string to unescape.
- *
- * @return string unescaped string.
- */
-function unescape($str)
-{
-    return htmlspecialchars_decode($str);
 }
 
 /**
