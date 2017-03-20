@@ -165,12 +165,13 @@ class LinkFilterTest extends PHPUnit_Framework_TestCase
 
     /**
      * No link for this hash
-     *
-     * @expectedException LinkNotFoundException
      */
     public function testFilterUnknownSmallHash()
     {
-        self::$linkFilter->filter(LinkFilter::$FILTER_HASH, 'Iblaah');
+        $this->assertEquals(
+            0,
+            count(self::$linkFilter->filter(LinkFilter::$FILTER_HASH, 'Iblaah'))
+        );
     }
 
     /**
