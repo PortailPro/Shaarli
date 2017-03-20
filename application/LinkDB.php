@@ -443,11 +443,11 @@ You use the community supported version of the original Shaarli project, by Seba
      *                                - searchtags: list of tags
      *                                - searchterm: term search
      * @param bool   $casesensitive Optional: Perform case sensitive filter
-     * @param string $visibility    return only all/private/public links
+     * @param bool   $privateonly   Optional: Returns private links only if true.
      *
      * @return array filtered links, all links if no suitable filter was provided.
      */
-    public function filterSearch($filterRequest = array(), $casesensitive = false, $visibility = 'all')
+    public function filterSearch($filterRequest = array(), $casesensitive = false, $privateonly = false)
     {
         // Filter link database according to parameters.
         $searchtags = !empty($filterRequest['searchtags']) ? escape($filterRequest['searchtags']) : '';
@@ -475,7 +475,7 @@ You use the community supported version of the original Shaarli project, by Seba
         }
 
         $linkFilter = new LinkFilter($this);
-        return $linkFilter->filter($type, $request, $casesensitive, $visibility);
+        return $linkFilter->filter($type, $request, $casesensitive, $privateonly);
     }
 
     /**
