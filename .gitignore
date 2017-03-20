@@ -32,4 +32,3 @@ plugins/*/config.php
 # 3rd party themes
 tpl/*
 !tpl/default
-!tpl/vintage
