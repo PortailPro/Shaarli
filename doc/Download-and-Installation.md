@@ -8,31 +8,26 @@ Several releases are available:
 --------------------------------------------------------
 
 ## Latest release (recommended)
-### Download as an archive
+
 Get the latest released version from the [releases](https://github.com/shaarli/Shaarli/releases) page.[](.html)
 
-**Download our *shaarli-full* archive** to include dependencies.
+The current latest released version is `v0.7.0`.
 
-The current latest released version is `v0.8.0`
+### Download as an archive
 
-Or in command lines:
+As a .zip archive:
 
 ```bash
-$ wget https://github.com/shaarli/Shaarli/releases/download/v0.8.0/shaarli-v0.8.0-full.zip
-$ unzip shaarli-v0.8.0-full.zip
-$ mv Shaarli /path/to/shaarli/
+$ wget https://github.com/shaarli/Shaarli/archive/v0.7.0.zip
+$ unzip Shaarli-v0.7.0.zip
+$ mv Shaarli-v0.7.0 /path/to/shaarli/
 ```
+
 
 |  !  |In most cases, download Shaarli from the [releases](https://github.com/shaarli/Shaarli/releases) page. Cloning using `git` or downloading Github branches as zip files requires additional steps (see below).|[](.html)
 |-----|--------------------------|
 
-### Using git
 
-```
-mkdir -p /path/to/shaarli && cd /path/to/shaarli/
-git clone -b v0.8.0 https://github.com/shaarli/Shaarli.git .
-composer update --no-dev
-```
 
 --------------------------------------------------------
 
