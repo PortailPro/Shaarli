@@ -43,7 +43,6 @@ Login: `demo`; Password: `demo`
     - daily RSS feed
 - permalinks for easy reference
 - links can be public or private
-- extensible through [plugins](https://github.com/shaarli/Shaarli/wiki/Plugins#plugin-usage)
 
 ### Tag, view and search your links!
 - add a custom title and description to archived links
