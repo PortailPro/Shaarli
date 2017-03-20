@@ -551,6 +551,33 @@ function getMaxFileSize()
     return $maxsize;
 }
 
+/*  Converts a linkdate time (YYYYMMDD_HHMMSS) of an article to a timestamp (Unix epoch)
+    (used to build the ADD_DATE attribute in Netscape-bookmarks file)
+    PS: I could have used strptime(), but it does not exist on Windows. I'm too kind. */
+function linkdate2timestamp($linkdate)
+{
+    if(strcmp($linkdate, '_000000') !== 0 || !$linkdate){
+        $Y=$M=$D=$h=$m=$s=0;
+        $r = sscanf($linkdate,'%4d%2d%2d_%2d%2d%2d',$Y,$M,$D,$h,$m,$s);
+        return mktime($h,$m,$s,$M,$D,$Y);
+    }
+    return time();
+}
+
+/*  Converts a linkdate time (YYYYMMDD_HHMMSS) of an article to a RFC822 date.
+    (used to build the pubDate attribute in RSS feed.)  */
+function linkdate2rfc822($linkdate)
+{
+    return date('r',linkdate2timestamp($linkdate)); // 'r' is for RFC822 date format.
+}
+
+/*  Converts a linkdate time (YYYYMMDD_HHMMSS) of an article to a ISO 8601 date.
+    (used to build the updated tags in ATOM feed.)  */
+function linkdate2iso8601($linkdate)
+{
+    return date('c',linkdate2timestamp($linkdate)); // 'c' is for ISO 8601 date format.
+}
+
 // ------------------------------------------------------------------------------------------
 // Token management for XSRF protection
 // Token should be used in any form which acts on data (create,update,delete,import...).
@@ -742,16 +769,14 @@ function showRSS()
     {
         $link = $linksToDisplay[$keys[$i]];
         $guid = $pageaddr.'?'.smallHash($link['linkdate']);
-        $date = DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $link['linkdate']);
+        $rfc822date = linkdate2rfc822($link['linkdate']);
         $absurl = $link['url'];
         if (startsWith($absurl,'?')) $absurl=$pageaddr.$absurl;  // make permalink URL absolute
         if ($usepermalinks===true)
             echo '<item><title>'.$link['title'].'</title><guid isPermaLink="true">'.$guid.'</guid><link>'.$guid.'</link>';
         else
             echo '<item><title>'.$link['title'].'</title><guid isPermaLink="false">'.$guid.'</guid><link>'.$absurl.'</link>';
-        if (!$GLOBALS['config']['HIDE_TIMESTAMPS'] || isLoggedIn()) {
-            echo '<pubDate>'.escape($date->format(DateTime::RSS))."</pubDate>\n";
-        }
+        if (!$GLOBALS['config']['HIDE_TIMESTAMPS'] || isLoggedIn()) echo '<pubDate>'.escape($rfc822date)."</pubDate>\n";
         if ($link['tags']!='') // Adding tags to each RSS entry (as mentioned in RSS specification)
         {
             foreach(explode(' ',$link['tags']) as $tag) { echo '<category domain="'.$pageaddr.'">'.$tag.'</category>'."\n"; }
@@ -832,9 +857,8 @@ function showATOM()
     {
         $link = $linksToDisplay[$keys[$i]];
         $guid = $pageaddr.'?'.smallHash($link['linkdate']);
-        $date = DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $link['linkdate']);
-        $iso8601date = $date->format(DateTime::ISO8601);
-        $latestDate = max($latestDate, $iso8601date);
+        $iso8601date = linkdate2iso8601($link['linkdate']);
+        $latestDate = max($latestDate,$iso8601date);
         $absurl = $link['url'];
         if (startsWith($absurl,'?')) $absurl=$pageaddr.$absurl;  // make permalink URL absolute
         $entries.='<entry><title>'.$link['title'].'</title>';
@@ -842,10 +866,7 @@ function showATOM()
             $entries.='<link href="'.$guid.'" /><id>'.$guid.'</id>';
         else
             $entries.='<link href="'.$absurl.'" /><id>'.$guid.'</id>';
-
-        if (!$GLOBALS['config']['HIDE_TIMESTAMPS'] || isLoggedIn()) {
-            $entries.='<updated>'.escape($iso8601date).'</updated>';
-        }
+        if (!$GLOBALS['config']['HIDE_TIMESTAMPS'] || isLoggedIn()) $entries.='<updated>'.escape($iso8601date).'</updated>';
 
         // Add permalink in description
         $descriptionlink = '(<a href="'.$guid.'">Permalink</a>)';
@@ -951,7 +972,8 @@ function showDailyRSS() {
 
     // For each day.
     foreach ($days as $day => $linkdates) {
-        $dayDate = DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $day.'_000000');
+        $daydate = linkdate2timestamp($day.'_000000'); // Full text date
+        $rfc822date = linkdate2rfc822($day.'_000000');
         $absurl = escape(index_url($_SERVER).'?do=daily&day='.$day);  // Absolute URL of the corresponding "Daily" page.
 
         // Build the HTML body of this RSS entry.
@@ -964,8 +986,7 @@ function showDailyRSS() {
             $l = $LINKSDB[$linkdate];
             $l['formatedDescription'] = format_description($l['description'], $GLOBALS['redirector']);
             $l['thumbnail'] = thumbnail($l['url']);
-            $l_date = DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $l['linkdate']);
-            $l['timestamp'] = $l_date->getTimestamp();
+            $l['timestamp'] = linkdate2timestamp($l['linkdate']);
             if (startsWith($l['url'], '?')) {
                 $l['url'] = index_url($_SERVER) . $l['url'];  // make permalink URL absolute
             }
@@ -975,10 +996,10 @@ function showDailyRSS() {
         // Then build the HTML for this day:
         $tpl = new RainTPL;
         $tpl->assign('title', $GLOBALS['title']);
-        $tpl->assign('daydate', $dayDate->getTimestamp());
+        $tpl->assign('daydate', $daydate);
         $tpl->assign('absurl', $absurl);
         $tpl->assign('links', $links);
-        $tpl->assign('rssdate', escape($dayDate->format(DateTime::RSS)));
+        $tpl->assign('rfc822date', escape($rfc822date));
         $html = $tpl->draw('dailyrss', $return_string=true);
 
         echo $html . PHP_EOL;
@@ -1034,8 +1055,7 @@ function showDaily($pageBuilder)
         $linksToDisplay[$key]['taglist']=$taglist;
         $linksToDisplay[$key]['formatedDescription'] = format_description($link['description'], $GLOBALS['redirector']);
         $linksToDisplay[$key]['thumbnail'] = thumbnail($link['url']);
-        $date = DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $link['linkdate']);
-        $linksToDisplay[$key]['timestamp'] = $date->getTimestamp();
+        $linksToDisplay[$key]['timestamp'] = linkdate2timestamp($link['linkdate']);
     }
 
     /* We need to spread the articles on 3 columns.
@@ -1060,12 +1080,11 @@ function showDaily($pageBuilder)
         $fill[$index]+=$length;
     }
 
-    $dayDate = DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $day.'_000000');
     $data = array(
         'linksToDisplay' => $linksToDisplay,
         'linkcount' => count($LINKSDB),
         'cols' => $columns,
-        'day' => $dayDate->getTimestamp(),
+        'day' => linkdate2timestamp($day.'_000000'),
         'previousday' => $previousday,
         'nextday' => $nextday,
     );
@@ -1780,8 +1799,7 @@ HTML;
                ($exportWhat=='private' && $link['private']!=0) ||
                ($exportWhat=='public' && $link['private']==0))
             {
-                $date = DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $link['linkdate']);
-                echo '<DT><A HREF="'.$link['url'].'" ADD_DATE="'.$date->getTimestamp().'" PRIVATE="'.$link['private'].'"';
+                echo '<DT><A HREF="'.$link['url'].'" ADD_DATE="'.linkdate2timestamp($link['linkdate']).'" PRIVATE="'.$link['private'].'"';
                 if ($link['tags']!='') echo ' TAGS="'.str_replace(' ',',',$link['tags']).'"';
                 echo '>'.$link['title']."</A>\n";
                 if ($link['description']!='') echo '<DD>'.$link['description']."\n";
@@ -2024,8 +2042,7 @@ function buildLinkList($PAGE,$LINKSDB)
         $link['description'] = format_description($link['description'], $GLOBALS['redirector']);
         $classLi =  ($i % 2) != 0 ? '' : 'publicLinkHightLight';
         $link['class'] = $link['private'] == 0 ? $classLi : 'private';
-        $date = DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $link['linkdate']);
-        $link['timestamp'] = $date->getTimestamp();
+        $link['timestamp'] = linkdate2timestamp($link['linkdate']);
         $taglist = explode(' ', $link['tags']);
         uasort($taglist, 'strcasecmp');
         $link['taglist'] = $taglist;
