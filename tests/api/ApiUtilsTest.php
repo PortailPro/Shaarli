@@ -2,9 +2,6 @@
 
 namespace Shaarli\Api;
 
-use Shaarli\Base64Url;
-
-
 /**
  * Class ApiUtilsTest
  */
@@ -27,14 +24,14 @@ class ApiUtilsTest extends \PHPUnit_Framework_TestCase
      */
     public static function generateValidJwtToken($secret)
     {
-        $header = Base64Url::encode('{
+        $header = base64_encode('{
             "typ": "JWT",
             "alg": "HS512"
         }');
-        $payload = Base64Url::encode('{
+        $payload = base64_encode('{
             "iat": '. time() .'
         }');
-        $signature = Base64Url::encode(hash_hmac('sha512', $header .'.'. $payload , $secret, true));
+        $signature = hash_hmac('sha512', $header .'.'. $payload , $secret);
         return $header .'.'. $payload .'.'. $signature;
     }
 
@@ -49,9 +46,9 @@ class ApiUtilsTest extends \PHPUnit_Framework_TestCase
      */
     public static function generateCustomJwtToken($header, $payload, $secret)
     {
-        $header = Base64Url::encode($header);
-        $payload = Base64Url::encode($payload);
-        $signature = Base64Url::encode(hash_hmac('sha512', $header . '.' . $payload, $secret, true));
+        $header = base64_encode($header);
+        $payload = base64_encode($payload);
+        $signature = hash_hmac('sha512', $header . '.' . $payload, $secret);
         return $header . '.' . $payload . '.' . $signature;
     }
 
