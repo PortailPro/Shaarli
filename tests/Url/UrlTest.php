@@ -184,9 +184,9 @@ class UrlTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test International Domain Name to ASCII conversion
+     * Test IndToAscii.
      */
-    function testIdnToAscii()
+    function testIndToAscii()
     {
         $ind = 'http://www.académie-française.fr/';
         $expected = 'http://www.xn--acadmie-franaise-npb1a.fr/';
