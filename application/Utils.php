@@ -226,7 +226,7 @@ function space2nbsp($text)
  *
  * @return string formatted description.
  */
-function format_description($description, $redirector = false) {
+function format_description($description, $redirector) {
     return nl2br(space2nbsp(text2clickable($description, $redirector)));
 }
 
