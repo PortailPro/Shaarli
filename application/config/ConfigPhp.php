@@ -66,6 +66,9 @@ class ConfigPhp implements ConfigIO
             }
         }
 
+        // FIXME!
+        //$configStr .= 'date_default_timezone_set('.var_export($conf['timezone'], true).');'. PHP_EOL;
+
         if (!file_put_contents($filepath, $configStr)
             || strcmp(file_get_contents($filepath), $configStr) != 0
         ) {
