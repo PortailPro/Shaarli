@@ -41,14 +41,8 @@ function smallHash($text)
 
 /**
  * Tells if a string start with a substring
- *
- * @param string $haystack Given string.
- * @param string $needle   String to search at the beginning of $haystack.
- * @param bool   $case     Case sensitive.
- *
- * @return bool True if $haystack starts with $needle.
  */
-function startsWith($haystack, $needle, $case = true)
+function startsWith($haystack, $needle, $case=true)
 {
     if ($case) {
         return (strcmp(substr($haystack, 0, strlen($needle)), $needle) === 0);
@@ -58,14 +52,8 @@ function startsWith($haystack, $needle, $case = true)
 
 /**
  * Tells if a string ends with a substring
- *
- * @param string $haystack Given string.
- * @param string $needle   String to search at the end of $haystack.
- * @param bool   $case     Case sensitive.
- *
- * @return bool True if $haystack ends with $needle.
  */
-function endsWith($haystack, $needle, $case = true)
+function endsWith($haystack, $needle, $case=true)
 {
     if ($case) {
         return (strcmp(substr($haystack, strlen($haystack) - strlen($needle)), $needle) === 0);

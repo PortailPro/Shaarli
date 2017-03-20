@@ -193,7 +193,7 @@ function server_url($server)
 function index_url($server)
 {
     $scriptname = $server['SCRIPT_NAME'];
-    if (endsWith($scriptname, 'index.php')) {
+    if (endswith($scriptname, 'index.php')) {
         $scriptname = substr($scriptname, 0, -9);
     }
     return server_url($server) . $scriptname;
