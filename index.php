@@ -910,6 +910,10 @@ function renderPage($conf, $pluginManager, $LINKSDB)
         $feedGenerator->setLocale(strtolower(setlocale(LC_COLLATE, 0)));
         $feedGenerator->setHideDates($conf->get('privacy.hide_timestamps') && !isLoggedIn());
         $feedGenerator->setUsePermalinks(isset($_GET['permalinks']) || !$conf->get('feed.rss_permalinks'));
+        $pshUrl = $conf->get('config.PUBSUBHUB_URL');
+        if (!empty($pshUrl)) {
+            $feedGenerator->setPubsubhubUrl($pshUrl);
+        }
         $data = $feedGenerator->buildData();
 
         // Process plugin hook.
@@ -1285,6 +1289,7 @@ function renderPage($conf, $pluginManager, $LINKSDB)
 
         $LINKSDB[$id] = $link;
         $LINKSDB->save($conf->get('resource.page_cache'));
+        pubsubhub($conf);
 
         // If we are called from the bookmarklet, we must close the popup:
         if (isset($_GET['source']) && ($_GET['source']=='bookmarklet' || $_GET['source']=='firefoxsocialapi')) {
