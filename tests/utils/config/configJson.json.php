@@ -24,8 +24,7 @@
     },
     "resource": {
         "datastore": "tests\/utils\/config\/datastore.php",
-        "data_dir": "tests\/utils\/config",
-        "raintpl_tpl": "tpl/"
+        "data_dir": "tests\/utils\/config"
     },
     "plugins": {
         "WALLABAG_VERSION": 1
