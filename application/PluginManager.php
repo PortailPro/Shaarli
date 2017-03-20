@@ -185,11 +185,7 @@ class PluginManager
                     continue;
                 }
 
-                $metaData[$plugin]['parameters'][$param]['value'] = '';
-                // Optional parameter description in parameter.PARAM_NAME=
-                if (isset($metaData[$plugin]['parameter.'. $param])) {
-                    $metaData[$plugin]['parameters'][$param]['desc'] = $metaData[$plugin]['parameter.'. $param];
-                }
+                $metaData[$plugin]['parameters'][$param] = '';
             }
         }
 
