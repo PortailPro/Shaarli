@@ -84,9 +84,8 @@ class FeedBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(ReferenceLinkDB::$NB_LINKS_TOTAL, count($data['links']));
 
         // Test first link (note link)
-        $link = reset($data['links']);
-        $this->assertEquals(41, $link['id']);
-        $this->assertEquals(DateTime::createFromFormat('Ymd_His', '20150310_114651'), $link['created']);
+        $link = array_shift($data['links']);
+        $this->assertEquals('20150310_114651', $link['linkdate']);
         $this->assertEquals('http://host.tld/?WDWyig', $link['guid']);
         $this->assertEquals('http://host.tld/?WDWyig', $link['url']);
         $this->assertRegExp('/Tue, 10 Mar 2015 11:46:51 \+\d{4}/', $link['pub_iso_date']);
@@ -100,14 +99,14 @@ class FeedBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('sTuff', $link['taglist'][0]);
 
         // Test URL with external link.
-        $this->assertEquals('https://static.fsf.org/nosvn/faif-2.0.pdf', $data['links'][8]['url']);
+        $this->assertEquals('https://static.fsf.org/nosvn/faif-2.0.pdf', $data['links']['20150310_114633']['url']);
 
         // Test multitags.
-        $this->assertEquals(5, count($data['links'][6]['taglist']));
-        $this->assertEquals('css', $data['links'][6]['taglist'][0]);
+        $this->assertEquals(5, count($data['links']['20141125_084734']['taglist']));
+        $this->assertEquals('css', $data['links']['20141125_084734']['taglist'][0]);
 
         // Test update date
-        $this->assertRegExp('/2016-08-03T09:30:33\+\d{2}:\d{2}/', $data['links'][8]['up_iso_date']);
+        $this->assertRegExp('/2016-08-03T09:30:33\+\d{2}:\d{2}/', $data['links']['20150310_114633']['up_iso_date']);
     }
 
     /**
@@ -120,9 +119,9 @@ class FeedBuilderTest extends PHPUnit_Framework_TestCase
         $data = $feedBuilder->buildData();
         $this->assertEquals(ReferenceLinkDB::$NB_LINKS_TOTAL, count($data['links']));
         $this->assertRegExp('/2016-08-03T09:30:33\+\d{2}:\d{2}/', $data['last_update']);
-        $link = reset($data['links']);
+        $link = array_shift($data['links']);
         $this->assertRegExp('/2015-03-10T11:46:51\+\d{2}:\d{2}/', $link['pub_iso_date']);
-        $this->assertRegExp('/2016-08-03T09:30:33\+\d{2}:\d{2}/', $data['links'][8]['up_iso_date']);
+        $this->assertRegExp('/2016-08-03T09:30:33\+\d{2}:\d{2}/', $data['links']['20150310_114633']['up_iso_date']);
     }
 
     /**
@@ -139,8 +138,7 @@ class FeedBuilderTest extends PHPUnit_Framework_TestCase
         $data = $feedBuilder->buildData();
         $this->assertEquals(1, count($data['links']));
         $link = array_shift($data['links']);
-        $this->assertEquals(41, $link['id']);
-        $this->assertEquals(DateTime::createFromFormat('Ymd_His', '20150310_114651'), $link['created']);
+        $this->assertEquals('20150310_114651', $link['linkdate']);
     }
 
     /**
@@ -156,8 +154,7 @@ class FeedBuilderTest extends PHPUnit_Framework_TestCase
         $data = $feedBuilder->buildData();
         $this->assertEquals(1, count($data['links']));
         $link = array_shift($data['links']);
-        $this->assertEquals(41, $link['id']);
-        $this->assertEquals(DateTime::createFromFormat('Ymd_His', '20150310_114651'), $link['created']);
+        $this->assertEquals('20150310_114651', $link['linkdate']);
     }
 
     /**
@@ -173,17 +170,15 @@ class FeedBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($data['usepermalinks']);
         // First link is a permalink
         $link = array_shift($data['links']);
-        $this->assertEquals(41, $link['id']);
-        $this->assertEquals(DateTime::createFromFormat('Ymd_His', '20150310_114651'), $link['created']);
+        $this->assertEquals('20150310_114651', $link['linkdate']);
         $this->assertEquals('http://host.tld/?WDWyig', $link['guid']);
         $this->assertEquals('http://host.tld/?WDWyig', $link['url']);
         $this->assertContains('Direct link', $link['description']);
         $this->assertContains('http://host.tld/?WDWyig', $link['description']);
         // Second link is a direct link
         $link = array_shift($data['links']);
-        $this->assertEquals(8, $link['id']);
-        $this->assertEquals(DateTime::createFromFormat('Ymd_His', '20150310_114633'), $link['created']);
-        $this->assertEquals('http://host.tld/?RttfEw', $link['guid']);
+        $this->assertEquals('20150310_114633', $link['linkdate']);
+        $this->assertEquals('http://host.tld/?kLHmZg', $link['guid']);
         $this->assertEquals('https://static.fsf.org/nosvn/faif-2.0.pdf', $link['url']);
         $this->assertContains('Direct link', $link['description']);
         $this->assertContains('https://static.fsf.org/nosvn/faif-2.0.pdf', $link['description']);

@@ -43,18 +43,6 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
     protected $pagecache = 'tests';
 
     /**
-     * @var string Save the current timezone.
-     */
-    protected static $defaultTimeZone;
-
-    public static function setUpBeforeClass()
-    {
-        self::$defaultTimeZone = date_default_timezone_get();
-        // Timezone without DST for test consistency
-        date_default_timezone_set('Africa/Nairobi');
-    }
-
-    /**
      * Resets test data before each test
      */
     protected function setUp()
@@ -65,11 +53,6 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
         // start with an empty datastore
         file_put_contents(self::$testDatastore, '<?php /* S7QysKquBQA= */ ?>');
         $this->linkDb = new LinkDB(self::$testDatastore, true, false);
-    }
-
-    public static function tearDownAfterClass()
-    {
-        date_default_timezone_set(self::$defaultTimeZone);
     }
 
     /**
@@ -115,18 +98,17 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             array(
-                'id' => 0,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160618_203944'),
+                'linkdate' => '20160618_173944',
                 'title' => 'Hg Init a Mercurial tutorial by Joel Spolsky',
                 'url' => 'http://hginit.com/',
                 'description' => '',
                 'private' => 0,
-                'tags' => '',
-                'shorturl' => 'La37cg',
+                'tags' => ''
             ),
             $this->linkDb->getLinkFromUrl('http://hginit.com/')
         );
     }
+
 
     /**
      * Import bookmarks nested in a folder hierarchy
@@ -144,105 +126,89 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             array(
-                'id' => 0,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160225_235541'),
+                'linkdate' => '20160225_205541',
                 'title' => 'Nested 1',
                 'url' => 'http://nest.ed/1',
                 'description' => '',
                 'private' => 0,
-                'tags' => 'tag1 tag2',
-                'shorturl' => 'KyDNKA',
+                'tags' => 'tag1 tag2'
             ),
             $this->linkDb->getLinkFromUrl('http://nest.ed/1')
         );
         $this->assertEquals(
             array(
-                'id' => 1,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160225_235542'),
+                'linkdate' => '20160225_205542',
                 'title' => 'Nested 1-1',
                 'url' => 'http://nest.ed/1-1',
                 'description' => '',
                 'private' => 0,
-                'tags' => 'folder1 tag1 tag2',
-                'shorturl' => 'T2LnXg',
+                'tags' => 'folder1 tag1 tag2'
             ),
             $this->linkDb->getLinkFromUrl('http://nest.ed/1-1')
         );
         $this->assertEquals(
             array(
-                'id' => 2,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160225_235547'),
+                'linkdate' => '20160225_205547',
                 'title' => 'Nested 1-2',
                 'url' => 'http://nest.ed/1-2',
                 'description' => '',
                 'private' => 0,
-                'tags' => 'folder1 tag3 tag4',
-                'shorturl' => '46SZxA',
+                'tags' => 'folder1 tag3 tag4'
             ),
             $this->linkDb->getLinkFromUrl('http://nest.ed/1-2')
         );
         $this->assertEquals(
             array(
-                'id' => 3,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160202_202222'),
+                'linkdate' => '20160202_172222',
                 'title' => 'Nested 2-1',
                 'url' => 'http://nest.ed/2-1',
                 'description' => 'First link of the second section',
                 'private' => 1,
-                'tags' => 'folder2',
-                'shorturl' => '4UHOSw',
+                'tags' => 'folder2'
             ),
             $this->linkDb->getLinkFromUrl('http://nest.ed/2-1')
         );
         $this->assertEquals(
             array(
-                'id' => 4,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160119_230227'),
+                'linkdate' => '20160119_200227',
                 'title' => 'Nested 2-2',
                 'url' => 'http://nest.ed/2-2',
                 'description' => 'Second link of the second section',
                 'private' => 1,
-                'tags' => 'folder2',
-                'shorturl' => 'yfzwbw',
+                'tags' => 'folder2'
             ),
             $this->linkDb->getLinkFromUrl('http://nest.ed/2-2')
         );
         $this->assertEquals(
             array(
-                'id' => 5,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160202_202222'),
+                'linkdate' => '20160202_172223',
                 'title' => 'Nested 3-1',
                 'url' => 'http://nest.ed/3-1',
                 'description' => '',
                 'private' => 0,
-                'tags' => 'folder3 folder3-1 tag3',
-                'shorturl' => 'UwxIUQ',
+                'tags' => 'folder3 folder3-1 tag3'
             ),
             $this->linkDb->getLinkFromUrl('http://nest.ed/3-1')
         );
         $this->assertEquals(
             array(
-                'id' => 6,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160119_230227'),
+                'linkdate' => '20160119_200228',
                 'title' => 'Nested 3-2',
                 'url' => 'http://nest.ed/3-2',
                 'description' => '',
                 'private' => 0,
-                'tags' => 'folder3 folder3-1',
-                'shorturl' => 'p8dyZg',
+                'tags' => 'folder3 folder3-1'
             ),
             $this->linkDb->getLinkFromUrl('http://nest.ed/3-2')
         );
         $this->assertEquals(
             array(
-                'id' => 7,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160229_111541'),
+                'linkdate' => '20160229_081541',
                 'title' => 'Nested 2',
                 'url' => 'http://nest.ed/2',
                 'description' => '',
                 'private' => 0,
-                'tags' => 'tag4',
-                'shorturl' => 'Gt3Uug',
+                'tags' => 'tag4'
             ),
             $this->linkDb->getLinkFromUrl('http://nest.ed/2')
         );
@@ -261,34 +227,28 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
             .' 2 links imported, 0 links overwritten, 0 links skipped.',
             NetscapeBookmarkUtils::import(array(), $files, $this->linkDb, $this->pagecache)
         );
-
         $this->assertEquals(2, count($this->linkDb));
         $this->assertEquals(1, count_private($this->linkDb));
 
         $this->assertEquals(
             array(
-                'id' => 0,
-                // Old link - UTC+4 (note that TZ in the import file is ignored).
-                'created' => DateTime::createFromFormat('Ymd_His', '20001010_135536'),
+                'linkdate' => '20001010_105536',
                 'title' => 'Secret stuff',
                 'url' => 'https://private.tld',
                 'description' => "Super-secret stuff you're not supposed to know about",
                 'private' => 1,
-                'tags' => 'private secret',
-                'shorturl' => 'EokDtA',
+                'tags' => 'private secret'
             ),
             $this->linkDb->getLinkFromUrl('https://private.tld')
         );
         $this->assertEquals(
             array(
-                'id' => 1,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160225_235548'),
+                'linkdate' => '20160225_205548',
                 'title' => 'Public stuff',
                 'url' => 'http://public.tld',
                 'description' => '',
                 'private' => 0,
-                'tags' => 'public hello world',
-                'shorturl' => 'Er9ddA',
+                'tags' => 'public hello world'
             ),
             $this->linkDb->getLinkFromUrl('http://public.tld')
         );
@@ -311,28 +271,23 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             array(
-                'id' => 0,
-                // Note that TZ in the import file is ignored.
-                'created' => DateTime::createFromFormat('Ymd_His', '20001010_135536'),
+                'linkdate' => '20001010_105536',
                 'title' => 'Secret stuff',
                 'url' => 'https://private.tld',
                 'description' => "Super-secret stuff you're not supposed to know about",
                 'private' => 1,
-                'tags' => 'private secret',
-                'shorturl' => 'EokDtA',
+                'tags' => 'private secret'
             ),
             $this->linkDb->getLinkFromUrl('https://private.tld')
         );
         $this->assertEquals(
             array(
-                'id' => 1,
-                'created' => DateTime::createFromFormat('Ymd_His', '20160225_235548'),
+                'linkdate' => '20160225_205548',
                 'title' => 'Public stuff',
                 'url' => 'http://public.tld',
                 'description' => '',
                 'private' => 0,
-                'tags' => 'public hello world',
-                'shorturl' => 'Er9ddA',
+                'tags' => 'public hello world'
             ),
             $this->linkDb->getLinkFromUrl('http://public.tld')
         );
@@ -354,11 +309,11 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, count_private($this->linkDb));
         $this->assertEquals(
             0,
-            $this->linkDb[0]['private']
+            $this->linkDb['20001010_105536']['private']
         );
         $this->assertEquals(
             0,
-            $this->linkDb[1]['private']
+            $this->linkDb['20160225_205548']['private']
         );
     }
 
@@ -378,11 +333,11 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, count_private($this->linkDb));
         $this->assertEquals(
             1,
-            $this->linkDb['0']['private']
+            $this->linkDb['20001010_105536']['private']
         );
         $this->assertEquals(
             1,
-            $this->linkDb['1']['private']
+            $this->linkDb['20160225_205548']['private']
         );
     }
 
@@ -404,12 +359,13 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, count_private($this->linkDb));
         $this->assertEquals(
             1,
-            $this->linkDb[0]['private']
+            $this->linkDb['20001010_105536']['private']
         );
         $this->assertEquals(
             1,
-            $this->linkDb[1]['private']
+            $this->linkDb['20160225_205548']['private']
         );
+
         // re-import as public, enable overwriting
         $post = array(
             'privacy' => 'public',
@@ -424,11 +380,11 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, count_private($this->linkDb));
         $this->assertEquals(
             0,
-            $this->linkDb[0]['private']
+            $this->linkDb['20001010_105536']['private']
         );
         $this->assertEquals(
             0,
-            $this->linkDb[1]['private']
+            $this->linkDb['20160225_205548']['private']
         );
     }
 
@@ -450,11 +406,11 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, count_private($this->linkDb));
         $this->assertEquals(
             0,
-            $this->linkDb['0']['private']
+            $this->linkDb['20001010_105536']['private']
         );
         $this->assertEquals(
             0,
-            $this->linkDb['1']['private']
+            $this->linkDb['20160225_205548']['private']
         );
 
         // re-import as private, enable overwriting
@@ -471,11 +427,11 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, count_private($this->linkDb));
         $this->assertEquals(
             1,
-            $this->linkDb['0']['private']
+            $this->linkDb['20001010_105536']['private']
         );
         $this->assertEquals(
             1,
-            $this->linkDb['1']['private']
+            $this->linkDb['20160225_205548']['private']
         );
     }
 
@@ -524,11 +480,11 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, count_private($this->linkDb));
         $this->assertEquals(
             'tag1 tag2 tag3 private secret',
-            $this->linkDb['0']['tags']
+            $this->linkDb['20001010_105536']['tags']
         );
         $this->assertEquals(
             'tag1 tag2 tag3 public hello world',
-            $this->linkDb['1']['tags']
+            $this->linkDb['20160225_205548']['tags']
         );
     }
 
@@ -551,16 +507,16 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, count_private($this->linkDb));
         $this->assertEquals(
             'tag1&amp; tag2 &quot;tag3&quot; private secret',
-            $this->linkDb['0']['tags']
+            $this->linkDb['20001010_105536']['tags']
         );
         $this->assertEquals(
             'tag1&amp; tag2 &quot;tag3&quot; public hello world',
-            $this->linkDb['1']['tags']
+            $this->linkDb['20160225_205548']['tags']
         );
     }
 
     /**
-     * Ensure each imported bookmark has a unique id
+     * Ensure each imported bookmark has a unique linkdate
      *
      * See https://github.com/shaarli/Shaarli/issues/351
      */
@@ -575,16 +531,16 @@ class BookmarkImportTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(3, count($this->linkDb));
         $this->assertEquals(0, count_private($this->linkDb));
         $this->assertEquals(
-            0,
-            $this->linkDb[0]['id']
+            '20160225_205548',
+            $this->linkDb['20160225_205548']['linkdate']
         );
         $this->assertEquals(
-            1,
-            $this->linkDb[1]['id']
+            '20160225_205549',
+            $this->linkDb['20160225_205549']['linkdate']
         );
         $this->assertEquals(
-            2,
-            $this->linkDb[2]['id']
+            '20160225_205550',
+            $this->linkDb['20160225_205550']['linkdate']
         );
     }
 }
