@@ -1208,7 +1208,7 @@ function renderPage($conf, $pluginManager, $LINKSDB)
                 $LINKSDB[$key]=$value;
             }
             $LINKSDB->save($conf->get('resource.page_cache'));
-            echo '<script>alert("Tag was removed from '.count($linksToAlter).' links.");document.location=\'?do=changetag\';</script>';
+            echo '<script>alert("Tag was removed from '.count($linksToAlter).' links.");document.location=\'?\';</script>';
             exit;
         }
 
