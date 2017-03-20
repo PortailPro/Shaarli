@@ -298,7 +298,6 @@ class LinkDBTest extends PHPUnit_Framework_TestCase
                 'w3c' => 1,
                 'css' => 1,
                 'Mercurial' => 1,
-                'stuff' => 2,
                 '-exclude' => 1,
                 '.hidden' => 1,
             ),

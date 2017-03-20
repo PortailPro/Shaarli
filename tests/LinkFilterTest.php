@@ -165,17 +165,6 @@ class LinkFilterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Full-text search - no result found.
-     */
-    public function testFilterFullTextNoResult()
-    {
-        $this->assertEquals(
-            0,
-            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, 'azertyuiop'))
-        );
-    }
-
-    /**
      * Full-text search - result from a link's URL
      */
     public function testFilterFullTextURL()
@@ -273,56 +262,28 @@ class LinkFilterTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             1,
-            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, 'free -gnu'))
+            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, 'free -software'))
         );
 
         $this->assertEquals(
-            6,
-            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, '-revolution'))
+            7,
+            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, '-software'))
         );
     }
 
     /**
-     * Full-text search - test AND, exact terms and exclusion combined, across fields.
+     * Full-text search - test AND, exact terms and exclusion combined.
      */
     public function testMultiSearch()
     {
         $this->assertEquals(
             2,
-            count(self::$linkFilter->filter(
-                LinkFilter::$FILTER_TEXT,
-                '"Free Software " stallman "read this" @website stuff'
-            ))
+            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, '"Free Software " stallman "read this"'))
         );
 
         $this->assertEquals(
             1,
-            count(self::$linkFilter->filter(
-                LinkFilter::$FILTER_TEXT,
-                '"free software " stallman "read this" -beard @website stuff'
-            ))
-        );
-    }
-
-    /**
-     * Full-text search - make sure that exact search won't work across fields.
-     */
-    public function testSearchExactTermMultiFieldsKo()
-    {
-        $this->assertEquals(
-            0,
-            count(self::$linkFilter->filter(
-                LinkFilter::$FILTER_TEXT,
-                '"designer naming"'
-            ))
-        );
-
-        $this->assertEquals(
-            0,
-            count(self::$linkFilter->filter(
-                LinkFilter::$FILTER_TEXT,
-                '"designernaming"'
-            ))
+            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, '"free software " stallman "read this" -beard'))
         );
     }
 
