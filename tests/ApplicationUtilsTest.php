@@ -1,10 +1,9 @@
 <?php
-use Shaarli\Config\ConfigManager;
-
 /**
  * ApplicationUtils' tests
  */
 
+require_once 'application/config/ConfigManager.php';
 require_once 'application/ApplicationUtils.php';
 
 /**

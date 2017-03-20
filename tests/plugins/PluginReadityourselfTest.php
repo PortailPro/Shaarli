@@ -1,5 +1,4 @@
 <?php
-use Shaarli\Config\ConfigManager;
 
 /**
  * PluginReadityourselfTest.php.php

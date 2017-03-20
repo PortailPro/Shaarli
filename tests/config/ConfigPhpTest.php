@@ -1,10 +1,11 @@
 <?php
-namespace Shaarli\Config;
+
+require_once 'application/config/ConfigPhp.php';
 
 /**
  * Class ConfigPhpTest
  */
-class ConfigPhpTest extends \PHPUnit_Framework_TestCase
+class ConfigPhpTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var ConfigPhp

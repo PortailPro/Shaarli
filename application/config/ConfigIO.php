@@ -1,5 +1,4 @@
 <?php
-namespace Shaarli\Config;
 
 /**
  * Interface ConfigIO
