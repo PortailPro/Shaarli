@@ -1,4 +1,4 @@
-# Shaarli runtime resources
+# Ignore data/, tmp/, cache/ and pagecache/
 data
 tmp
 cache
@@ -9,22 +9,18 @@ pagecache
 .buildpath
 .project
 
-# Raintpl generated pages
+# Ignore raintpl generated pages
 *.rtpl.php
 
-# 3rd-party dependencies
+# Ignore test dependencies
 composer.lock
-vendor/
+/vendor/
 
-# Release archives
-*.tar
-*.zip
-
-# Development and test resources
+# Ignore development and test resources
 coverage
 doxygen
 sandbox
 phpmd.html
 
-# User plugin configuration
+# Ignore user plugin configuration
 plugins/*/config.php
