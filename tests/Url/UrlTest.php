@@ -85,7 +85,6 @@ class UrlTest extends PHPUnit_Framework_TestCase
         $this->assertUrlIsCleaned('?utm_term=1n4l');
 
         $this->assertUrlIsCleaned('?xtor=some-url');
-        $this->assertUrlIsCleaned('?PHPSESSID=012345678910111213');
     }
 
     /**
