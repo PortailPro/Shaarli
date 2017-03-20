@@ -16,15 +16,7 @@
 function hook_playvideos_render_header($data)
 {
     if ($data['_PAGE_'] == Router::$PAGE_LINKLIST) {
-        $playvideo = array(
-            'attr' => array(
-                'href' => '#',
-                'title' => 'Video player',
-                'id' => 'playvideos',
-            ),
-            'html' => '► Play Videos'
-        );
-        $data['buttons_toolbar'][] = $playvideo;
+        $data['buttons_toolbar'][] = file_get_contents(PluginManager::$PLUGINS_PATH . '/playvideos/playvideos.html');
     }
 
     return $data;
