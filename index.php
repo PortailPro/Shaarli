@@ -603,7 +603,7 @@ class pageBuilder
         if (!empty($_GET['searchtags'])) {
             $searchcrits .= '&searchtags=' . urlencode($_GET['searchtags']);
         }
-        if (!empty($_GET['searchterm'])) {
+        elseif (!empty($_GET['searchterm'])) {
             $searchcrits .= '&searchterm=' . urlencode($_GET['searchterm']);
         }
         $this->tpl->assign('searchcrits', $searchcrits);
@@ -689,19 +689,11 @@ function showRSS()
     // Read links from database (and filter private links if user it not logged in).
 
     // Optionally filter the results:
-    $searchtags = !empty($_GET['searchtags']) ? escape($_GET['searchtags']) : '';
-    $searchterm = !empty($_GET['searchterm']) ? escape($_GET['searchterm']) : '';
-    if (! empty($searchtags) && ! empty($searchterm)) {
-        $linksToDisplay = $LINKSDB->filter(
-            LinkFilter::$FILTER_TAG | LinkFilter::$FILTER_TEXT,
-            array($searchtags, $searchterm)
-        );
+    if (!empty($_GET['searchterm'])) {
+        $linksToDisplay = $LINKSDB->filter(LinkFilter::$FILTER_TEXT, $_GET['searchterm']);
     }
-    elseif ($searchtags) {
-        $linksToDisplay = $LINKSDB->filter(LinkFilter::$FILTER_TAG, $searchtags);
-    }
-    elseif ($searchterm) {
-        $linksToDisplay = $LINKSDB->filter(LinkFilter::$FILTER_TEXT, $searchterm);
+    elseif (!empty($_GET['searchtags'])) {
+        $linksToDisplay = $LINKSDB->filter(LinkFilter::$FILTER_TAG, trim($_GET['searchtags']));
     }
     else {
         $linksToDisplay = $LINKSDB;
@@ -795,19 +787,11 @@ function showATOM()
     );
 
     // Optionally filter the results:
-    $searchtags = !empty($_GET['searchtags']) ? escape($_GET['searchtags']) : '';
-    $searchterm = !empty($_GET['searchterm']) ? escape($_GET['searchterm']) : '';
-    if (! empty($searchtags) && ! empty($searchterm)) {
-        $linksToDisplay = $LINKSDB->filter(
-            LinkFilter::$FILTER_TAG | LinkFilter::$FILTER_TEXT,
-            array($searchtags, $searchterm)
-        );
+    if (!empty($_GET['searchterm'])) {
+        $linksToDisplay = $LINKSDB->filter(LinkFilter::$FILTER_TEXT, $_GET['searchterm']);
     }
-    elseif ($searchtags) {
-        $linksToDisplay = $LINKSDB->filter(LinkFilter::$FILTER_TAG, $searchtags);
-    }
-    elseif ($searchterm) {
-        $linksToDisplay = $LINKSDB->filter(LinkFilter::$FILTER_TEXT, $searchterm);
+    else if (!empty($_GET['searchtags'])) {
+        $linksToDisplay = $LINKSDB->filter(LinkFilter::$FILTER_TAG, trim($_GET['searchtags']));
     }
     else {
         $linksToDisplay = $LINKSDB;
@@ -1161,19 +1145,11 @@ function renderPage()
     if ($targetPage == Router::$PAGE_PICWALL)
     {
         // Optionally filter the results:
-        $searchtags = !empty($_GET['searchtags']) ? escape($_GET['searchtags']) : '';
-        $searchterm = !empty($_GET['searchterm']) ? escape($_GET['searchterm']) : '';
-        if (! empty($searchtags) && ! empty($searchterm)) {
-            $links = $LINKSDB->filter(
-                LinkFilter::$FILTER_TAG | LinkFilter::$FILTER_TEXT,
-                array($searchtags, $searchterm)
-            );
+        if (!empty($_GET['searchterm'])) {
+            $links = $LINKSDB->filter(LinkFilter::$FILTER_TEXT, $_GET['searchterm']);
         }
-        elseif ($searchtags) {
-            $links = $LINKSDB->filter(LinkFilter::$FILTER_TAG, $searchtags);
-        }
-        elseif ($searchterm) {
-            $links = $LINKSDB->filter(LinkFilter::$FILTER_TEXT, $searchterm);
+        elseif (! empty($_GET['searchtags'])) {
+            $links = $LINKSDB->filter(LinkFilter::$FILTER_TAG, trim($_GET['searchtags']));
         }
         else {
             $links = $LINKSDB;
@@ -1968,46 +1944,29 @@ function importFile()
 // This function fills all the necessary fields in the $PAGE for the template 'linklist.html'
 function buildLinkList($PAGE,$LINKSDB)
 {
-    // Filter link database according to parameters.
-    $searchtags = !empty($_GET['searchtags']) ? escape($_GET['searchtags']) : '';
-    $searchterm = !empty($_GET['searchterm']) ? escape(trim($_GET['searchterm'])) : '';
+    // ---- Filter link database according to parameters
+    $search_type = '';
+    $search_crits = '';
     $privateonly = !empty($_SESSION['privateonly']) ? true : false;
 
-    // Search tags + fullsearch.
-    if (! empty($searchtags) && ! empty($searchterm)) {
-        $linksToDisplay = $LINKSDB->filter(
-            LinkFilter::$FILTER_TAG | LinkFilter::$FILTER_TEXT,
-            array($searchtags, $searchterm),
-            false,
-            $privateonly
-        );
+    // Fulltext search
+    if (isset($_GET['searchterm'])) {
+        $search_crits = escape(trim($_GET['searchterm']));
+        $search_type = LinkFilter::$FILTER_TEXT;
+        $linksToDisplay = $LINKSDB->filter($search_type, $search_crits, false, $privateonly);
     }
-    // Search by tags.
-    elseif (! empty($searchtags)) {
-        $linksToDisplay = $LINKSDB->filter(
-            LinkFilter::$FILTER_TAG,
-            $searchtags,
-            false,
-            $privateonly
-        );
-    }
-    // Fulltext search.
-    elseif (! empty($searchterm)) {
-        $linksToDisplay = $LINKSDB->filter(
-            LinkFilter::$FILTER_TEXT,
-            $searchterm,
-            false,
-            $privateonly
-        );
+    // Search by tag
+    elseif (isset($_GET['searchtags'])) {
+        $search_crits = explode(' ', escape(trim($_GET['searchtags'])));
+        $search_type = LinkFilter::$FILTER_TAG;
+        $linksToDisplay = $LINKSDB->filter($search_type, $search_crits, false, $privateonly);
     }
     // Detect smallHashes in URL.
-    elseif (! empty($_SERVER['QUERY_STRING'])
-        && preg_match('/[a-zA-Z0-9-_@]{6}(&.+?)?/', $_SERVER['QUERY_STRING'])
-    ) {
-        $linksToDisplay = $LINKSDB->filter(
-            LinkFilter::$FILTER_HASH,
-            substr(trim($_SERVER["QUERY_STRING"], '/'), 0, 6)
-        );
+    elseif (isset($_SERVER['QUERY_STRING'])
+        && preg_match('/[a-zA-Z0-9-_@]{6}(&.+?)?/', $_SERVER['QUERY_STRING'])) {
+        $search_type = LinkFilter::$FILTER_HASH;
+        $search_crits = substr(trim($_SERVER["QUERY_STRING"], '/'), 0, 6);
+        $linksToDisplay = $LINKSDB->filter($search_type, $search_crits);
 
         if (count($linksToDisplay) == 0) {
             $PAGE->render404('The link you are trying to reach does not exist or has been deleted.');
@@ -2063,18 +2022,21 @@ function buildLinkList($PAGE,$LINKSDB)
     }
 
     // Compute paging navigation
-    $searchtagsUrl = empty($searchtags) ? '' : '&searchtags=' . urlencode($searchtags);
-    $searchtermUrl = empty($searchterm) ? '' : '&searchterm=' . urlencode($searchterm);
+    $searchterm = empty($_GET['searchterm']) ? '' : '&searchterm=' . $_GET['searchterm'];
+    $searchtags = empty($_GET['searchtags']) ? '' : '&searchtags=' . $_GET['searchtags'];
     $previous_page_url = '';
     if ($i != count($keys)) {
-        $previous_page_url = '?page=' . ($page+1) . $searchtermUrl . $searchtagsUrl;
+        $previous_page_url = '?page=' . ($page+1) . $searchterm . $searchtags;
     }
     $next_page_url='';
     if ($page>1) {
-        $next_page_url = '?page=' . ($page-1) . $searchtermUrl . $searchtagsUrl;
+        $next_page_url = '?page=' . ($page-1) . $searchterm . $searchtags;
     }
 
-    $token = isLoggedIn() ? getToken() : '';
+    $token = '';
+    if (isLoggedIn()) {
+        $token = getToken();
+    }
 
     // Fill all template fields.
     $data = array(
@@ -2084,8 +2046,8 @@ function buildLinkList($PAGE,$LINKSDB)
         'page_current' => $page,
         'page_max' => $pagecount,
         'result_count' => count($linksToDisplay),
-        'search_term' => $searchterm,
-        'search_tags' => $searchtags,
+        'search_type' => $search_type,
+        'search_crits' => $search_crits,
         'redirector' => empty($GLOBALS['redirector']) ? '' : $GLOBALS['redirector'],  // Optional redirector URL.
         'token' => $token,
         'links' => $linkDisp,
