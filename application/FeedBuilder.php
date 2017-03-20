@@ -143,7 +143,7 @@ class FeedBuilder
      */
     protected function buildItem($link, $pageaddr)
     {
-        $link['guid'] = $pageaddr .'?'. $link['shorturl'];
+        $link['guid'] = $pageaddr .'?'. smallHash($link['created']->format('Ymd_His'));
         // Check for both signs of a note: starting with ? and 7 chars long.
         if ($link['url'][0] === '?' && strlen($link['url']) === 7) {
             $link['url'] = $pageaddr . $link['url'];

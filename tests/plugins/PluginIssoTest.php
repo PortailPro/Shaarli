@@ -52,9 +52,8 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
             'title' => $str,
             'links' => array(
                 array(
-                    'id' => 12,
                     'url' => $str,
-                    'created' => DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $date),
+                    'created' => DateTime::createFromFormat('Ymd_His', $date),
                 )
             )
         );
@@ -67,14 +66,7 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
 
         // plugin data
         $this->assertEquals(1, count($data['plugin_end_zone']));
-        $this->assertNotFalse(strpos(
-            $data['plugin_end_zone'][0],
-            'data-isso-id="'. $data['links'][0]['id'] .'"'
-        ));
-        $this->assertNotFalse(strpos(
-            $data['plugin_end_zone'][0],
-            'data-title="'. $data['links'][0]['id'] .'"'
-        ));
+        $this->assertNotFalse(strpos($data['plugin_end_zone'][0], $date));
         $this->assertNotFalse(strpos($data['plugin_end_zone'][0], 'embed.min.js'));
     }
 
@@ -93,14 +85,12 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
             'title' => $str,
             'links' => array(
                 array(
-                    'id' => 12,
                     'url' => $str,
-                    'created' => DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $date1),
+                    'created' => DateTime::createFromFormat('Ymd_His', $date1),
                 ),
                 array(
-                    'id' => 13,
                     'url' => $str . '2',
-                    'created' => DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $date2),
+                    'created' => DateTime::createFromFormat('Ymd_His', $date2),
                 ),
             )
         );
@@ -124,9 +114,8 @@ class PluginIssoTest extends PHPUnit_Framework_TestCase
             'title' => $str,
             'links' => array(
                 array(
-                    'id' => 12,
                     'url' => $str,
-                    'created' => DateTime::createFromFormat(LinkDB::LINK_DATE_FORMAT, $date),
+                    'created' => DateTime::createFromFormat('Ymd_His', $date),
                 )
             ),
             'search_term' => $str
