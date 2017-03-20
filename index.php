@@ -1078,7 +1078,6 @@ function renderPage($conf, $pluginManager)
     {
         $data = array(
             'pageabsaddr' => index_url($_SERVER),
-            'sslenabled' => !empty($_SERVER['HTTPS'])
         );
         $pluginManager->executeHooks('render_tools', $data);
 
