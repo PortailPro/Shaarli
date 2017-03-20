@@ -120,7 +120,7 @@ class LinkFilter
     {
         $filtered = array();
         foreach ($this->links as $key => $l) {
-            if ($smallHash == $l['shorturl']) {
+            if ($smallHash == smallHash($l['created']->format('Ymd_His'))) {
                 // Yes, this is ugly and slow
                 $filtered[$key] = $l;
                 return $filtered;

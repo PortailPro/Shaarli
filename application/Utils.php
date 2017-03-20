@@ -31,11 +31,7 @@ function logm($logFile, $clientIp, $message)
  *   - are NOT cryptographically secure (they CAN be forged)
  *
  *  In Shaarli, they are used as a tinyurl-like link to individual entries,
- *  built once with the combination of the date and item ID.
- *  e.g. smallHash('20111006_131924' . 142) --> eaWxtQ
- *
- * @warning before v0.8.1, smallhashes were built only with the date,
- *          and their value has been preserved.
+ *  e.g. smallHash('20111006_131924') --> yZH23w
  *
  * @param string $text Create a hash from this text.
  *
