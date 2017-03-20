@@ -15,27 +15,7 @@
 function hook_addlink_toolbar_render_header($data)
 {
     if ($data['_PAGE_'] == Router::$PAGE_LINKLIST && $data['_LOGGEDIN_'] === true) {
-        $form = array(
-            'attr' => array(
-                'method' => 'GET',
-                'action' => '',
-                'name'   => 'addform',
-                'class'  => 'addform',
-            ),
-            'inputs' => array(
-                array(
-                    'type' => 'text',
-                    'name' => 'post',
-                    'placeholder' => 'URI',
-                ),
-                array(
-                    'type' => 'submit',
-                    'value' => 'Add link',
-                    'class' => 'bigbutton',
-                ),
-            ),
-        );
-        $data['fields_toolbar'][] = $form;
+        $data['fields_toolbar'][] = file_get_contents(PluginManager::$PLUGINS_PATH . '/addlink_toolbar/addlink_toolbar.html');
     }
 
     return $data;
