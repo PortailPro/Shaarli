@@ -1590,9 +1590,8 @@ function renderPage()
         exit;
     }
 
+    // -------- Export as Netscape Bookmarks HTML file.
     if ($targetPage == Router::$PAGE_EXPORT) {
-        // Export links as a Netscape Bookmarks file
-
         if (empty($_GET['selection'])) {
             $PAGE->assign('linkcount',count($LINKSDB));
             $PAGE->renderPage('export');
@@ -1601,21 +1600,10 @@ function renderPage()
 
         // export as bookmarks_(all|private|public)_YYYYmmdd_HHMMSS.html
         $selection = $_GET['selection'];
-        if (isset($_GET['prepend_note_url'])) {
-            $prependNoteUrl = $_GET['prepend_note_url'];
-        } else {
-            $prependNoteUrl = false;
-        }
-
         try {
             $PAGE->assign(
                 'links',
-                NetscapeBookmarkUtils::filterAndFormat(
-                    $LINKSDB,
-                    $selection,
-                    $prependNoteUrl,
-                    index_url($_SERVER)
-                )
+                NetscapeBookmarkUtils::filterAndFormat($LINKSDB, $selection)
             );
         } catch (Exception $exc) {
             header('Content-Type: text/plain; charset=utf-8');
