@@ -4,9 +4,17 @@
  * Class PluginManager
  *
  * Use to manage, load and execute plugins.
+ *
+ * Using Singleton design pattern.
  */
 class PluginManager
 {
+    /**
+     * PluginManager singleton instance.
+     * @var PluginManager $instance
+     */
+    private static $instance;
+
     /**
      * List of authorized plugins from configuration file.
      * @var array $authorizedPlugins
@@ -18,11 +26,6 @@ class PluginManager
      * @var array $loadedPlugins
      */
     private $loadedPlugins = array();
-
-    /**
-     * @var ConfigManager Configuration Manager instance.
-     */
-    protected $conf;
 
     /**
      * Plugins subdirectory.
@@ -37,13 +40,33 @@ class PluginManager
     public static $META_EXT = 'meta';
 
     /**
-     * Constructor.
-     *
-     * @param ConfigManager $conf Configuration Manager instance.
+     * Private constructor: new instances not allowed.
      */
-    public function __construct(&$conf)
+    private function __construct()
     {
-        $this->conf = $conf;
+    }
+
+    /**
+     * Cloning isn't allowed either.
+     *
+     * @return void
+     */
+    private function __clone()
+    {
+    }
+
+    /**
+     * Return existing instance of PluginManager, or create it.
+     *
+     * @return PluginManager instance.
+     */
+    public static function getInstance()
+    {
+        if (!(self::$instance instanceof self)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
     }
 
     /**
@@ -79,9 +102,9 @@ class PluginManager
     /**
      * Execute all plugins registered hook.
      *
-     * @param string        $hook   name of the hook to trigger.
-     * @param array         $data   list of data to manipulate passed by reference.
-     * @param array         $params additional parameters such as page target.
+     * @param string $hook   name of the hook to trigger.
+     * @param array  $data   list of data to manipulate passed by reference.
+     * @param array  $params additional parameters such as page target.
      *
      * @return void
      */
@@ -99,7 +122,7 @@ class PluginManager
             $hookFunction = $this->buildHookName($hook, $plugin);
 
             if (function_exists($hookFunction)) {
-                $data = call_user_func($hookFunction, $data, $this->conf);
+                $data = call_user_func($hookFunction, $data);
             }
         }
     }
@@ -125,7 +148,6 @@ class PluginManager
             throw new PluginFileNotFoundException($pluginName);
         }
 
-        $conf = $this->conf;
         include_once $pluginFilePath;
 
         $this->loadedPlugins[] = $pluginName;

@@ -4,8 +4,6 @@
  * PluginWallabagTest.php.php
  */
 
-// FIXME! add an init method.
-$conf = new ConfigManager('');
 require_once 'plugins/wallabag/wallabag.php';
 
 /**
@@ -27,7 +25,7 @@ class PluginWallabagTest extends PHPUnit_Framework_TestCase
      */
     function testWallabagLinklist()
     {
-        $conf = new ConfigManager('');
+        $conf = ConfigManager::getInstance();
         $conf->set('plugins.WALLABAG_URL', 'value');
         $str = 'http://randomstr.com/test';
         $data = array(
@@ -39,7 +37,7 @@ class PluginWallabagTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $data = hook_wallabag_render_linklist($data, $conf);
+        $data = hook_wallabag_render_linklist($data);
         $link = $data['links'][0];
         // data shouldn't be altered
         $this->assertEquals($str, $data['title']);
@@ -51,3 +49,4 @@ class PluginWallabagTest extends PHPUnit_Framework_TestCase
         $this->assertNotFalse(strpos($link['link_plugin'][0], $conf->get('plugins.WALLABAG_URL')));
     }
 }
+
