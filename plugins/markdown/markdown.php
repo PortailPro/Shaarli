@@ -14,19 +14,18 @@ define('NO_MD_TAG', 'nomarkdown');
 /**
  * Parse linklist descriptions.
  *
- * @param array         $data linklist data.
- * @param ConfigManager $conf instance.
+ * @param array $data linklist data.
  *
  * @return mixed linklist data parsed in markdown (and converted to HTML).
  */
-function hook_markdown_render_linklist($data, $conf)
+function hook_markdown_render_linklist($data)
 {
     foreach ($data['links'] as &$value) {
         if (!empty($value['tags']) && noMarkdownTag($value['tags'])) {
             $value = stripNoMarkdownTag($value);
             continue;
         }
-        $value['description'] = process_markdown($value['description'], $conf->get('security.markdown_escape', true));
+        $value['description'] = process_markdown($value['description']);
     }
     return $data;
 }
@@ -35,18 +34,17 @@ function hook_markdown_render_linklist($data, $conf)
  * Parse feed linklist descriptions.
  *
  * @param array $data linklist data.
- * @param ConfigManager $conf instance.
  *
  * @return mixed linklist data parsed in markdown (and converted to HTML).
  */
-function hook_markdown_render_feed($data, $conf)
+function hook_markdown_render_feed($data)
 {
     foreach ($data['links'] as &$value) {
         if (!empty($value['tags']) && noMarkdownTag($value['tags'])) {
             $value = stripNoMarkdownTag($value);
             continue;
         }
-        $value['description'] = process_markdown($value['description'], $conf->get('security.markdown_escape', true));
+        $value['description'] = process_markdown($value['description']);
     }
 
     return $data;
@@ -55,12 +53,11 @@ function hook_markdown_render_feed($data, $conf)
 /**
  * Parse daily descriptions.
  *
- * @param array         $data daily data.
- * @param ConfigManager $conf instance.
+ * @param array $data daily data.
  *
  * @return mixed daily data parsed in markdown (and converted to HTML).
  */
-function hook_markdown_render_daily($data, $conf)
+function hook_markdown_render_daily($data)
 {
     // Manipulate columns data
     foreach ($data['cols'] as &$value) {
@@ -69,10 +66,7 @@ function hook_markdown_render_daily($data, $conf)
                 $value2 = stripNoMarkdownTag($value2);
                 continue;
             }
-            $value2['formatedDescription'] = process_markdown(
-                $value2['formatedDescription'],
-                $conf->get('security.markdown_escape', true)
-            );
+            $value2['formatedDescription'] = process_markdown($value2['formatedDescription']);
         }
     }
 
@@ -256,7 +250,7 @@ function sanitize_html($description)
             $description);
     }
     $description = preg_replace(
-        '#(<[^>]+)on[a-z]*="?[^ "]*"?#is',
+        '#(<[^>]+)on[a-z]*="[^"]*"#is',
         '$1',
         $description);
     return $description;
@@ -271,11 +265,10 @@ function sanitize_html($description)
  *   5. Wrap description in 'markdown' CSS class.
  *
  * @param string $description input description text.
- * @param bool   $escape      escape HTML entities
  *
  * @return string HTML processed $description.
  */
-function process_markdown($description, $escape = true)
+function process_markdown($description)
 {
     $parsedown = new Parsedown();
 
@@ -285,7 +278,7 @@ function process_markdown($description, $escape = true)
     $processedDescription = reverse_text2clickable($processedDescription);
     $processedDescription = unescape($processedDescription);
     $processedDescription = $parsedown
-        ->setMarkupEscaped($escape)
+        ->setMarkupEscaped(false)
         ->setBreaksEnabled(true)
         ->text($processedDescription);
     $processedDescription = sanitize_html($processedDescription);
