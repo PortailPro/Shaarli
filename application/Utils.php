@@ -63,22 +63,14 @@ function endsWith($haystack, $needle, $case=true)
 
 /**
  * Htmlspecialchars wrapper
- * Support multidimensional array of strings.
  *
- * @param mixed $input Data to escape: a single string or an array of strings.
+ * @param string $str the string to escape.
  *
  * @return string escaped.
  */
-function escape($input)
+function escape($str)
 {
-    if (is_array($input)) {
-        $out = array();
-        foreach($input as $key => $value) {
-            $out[$key] = escape($value);
-        }
-        return $out;
-    }
-    return htmlspecialchars($input, ENT_COMPAT, 'UTF-8', false);
+    return htmlspecialchars($str, ENT_COMPAT, 'UTF-8', false);
 }
 
 /**
