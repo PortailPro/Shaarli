@@ -8,9 +8,10 @@
     <copyright>{$index_url}</copyright>
     <generator>Shaarli</generator>
     <atom:link rel="self" href="{$self_link}"  />
-    {loop="$plugins_feed_header"}
-      {$value}
-    {/loop}
+    {if="!empty($pubsubhub_url)"}
+      <!-- PubSubHubbub Discovery -->
+      <atom:link rel="hub" href="{$pubsubhub_url}" />
+    {/if}
     {loop="$links"}
       <item>
         <title>{$value.title}</title>
@@ -27,9 +28,6 @@
         <description><![CDATA[{$value.description}]]></description>
         {loop="$value.taglist"}
           <category domain="{$index_url}?searchtags=">{$value}</category>
-        {/loop}
-        {loop="$value.feed_plugins"}
-          {$value}
         {/loop}
       </item>
     {/loop}
