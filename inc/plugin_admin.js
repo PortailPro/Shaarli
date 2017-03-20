@@ -22,22 +22,14 @@ function changePos(elem, toPos)
 function changeOrder(pos, move)
 {
     var newpos = parseInt(pos) + move;
-    var lines = document.querySelectorAll('[data-order="'+ pos +'"]');
-    var changelines = document.querySelectorAll('[data-order="'+ newpos +'"]');
+    var line = document.querySelector('[data-order="'+ pos +'"]');
+    var changeline = document.querySelector('[data-order="'+ newpos +'"]');
+    var parent = changeline.parentNode;
 
-    // If we go down reverse lines to preserve the rows order
-    if (move > 0) {
-        lines = [].slice.call(lines).reverse();
-    }
-
-    for (var i = 0 ; i < lines.length ; i++) {
-        var parent = changelines[0].parentNode;
-        changePos(lines[i], newpos);
-        changePos(changelines[i], parseInt(pos));
-        var changeItem = move < 0 ? changelines[0] : changelines[changelines.length - 1].nextSibling;
-        parent.insertBefore(lines[i], changeItem);
-    }
-
+    changePos(line, newpos);
+    changePos(changeline, parseInt(pos));
+    var changeItem = move < 0 ? changeline : changeline.nextSibling;
+    parent.insertBefore(line, changeItem);
 }
 
 /**
