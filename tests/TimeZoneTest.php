@@ -67,6 +67,7 @@ class TimeZoneTest extends PHPUnit_Framework_TestCase
     {
         $this->assertTrue(isTimeZoneValid('America', 'Argentina/Ushuaia'));
         $this->assertTrue(isTimeZoneValid('Europe', 'Oslo'));
+        $this->assertTrue(isTimeZoneValid('UTC', 'UTC'));
     }
 
     /**
@@ -77,6 +78,5 @@ class TimeZoneTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(isTimeZoneValid('CEST', 'CEST'));
         $this->assertFalse(isTimeZoneValid('Europe', 'Atlantis'));
         $this->assertFalse(isTimeZoneValid('Middle_Earth', 'Moria'));
-        $this->assertFalse(isTimeZoneValid('UTC', 'UTC'));
     }
 }
