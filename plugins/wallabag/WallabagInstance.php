@@ -35,7 +35,7 @@ class WallabagInstance
      */
     private $apiVersion;
 
-    public function __construct($instance, $version)
+    function __construct($instance, $version)
     {
         if ($this->isVersionAllowed($version)) {
             $this->apiVersion = self::$wallabagVersions[$version];

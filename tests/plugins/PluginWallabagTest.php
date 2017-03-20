@@ -15,7 +15,7 @@ class PluginWallabagTest extends PHPUnit_Framework_TestCase
     /**
      * Reset plugin path
      */
-    public function setUp()
+    function setUp()
     {
         PluginManager::$PLUGINS_PATH = 'plugins';
     }
@@ -23,7 +23,7 @@ class PluginWallabagTest extends PHPUnit_Framework_TestCase
     /**
      * Test wallabag init without errors.
      */
-    public function testWallabagInitNoError()
+    function testWallabagInitNoError()
     {
         $conf = new ConfigManager('');
         $conf->set('plugins.WALLABAG_URL', 'value');
@@ -34,7 +34,7 @@ class PluginWallabagTest extends PHPUnit_Framework_TestCase
     /**
      * Test wallabag init with errors.
      */
-    public function testWallabagInitError()
+    function testWallabagInitError()
     {
         $conf = new ConfigManager('');
         $errors = wallabag_init($conf);
@@ -44,7 +44,7 @@ class PluginWallabagTest extends PHPUnit_Framework_TestCase
     /**
      * Test render_linklist hook.
      */
-    public function testWallabagLinklist()
+    function testWallabagLinklist()
     {
         $conf = new ConfigManager('');
         $conf->set('plugins.WALLABAG_URL', 'value');

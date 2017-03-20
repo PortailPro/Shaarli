@@ -72,7 +72,7 @@ class ConfigPhp implements ConfigIO
     /**
      * @inheritdoc
      */
-    public function read($filepath)
+    function read($filepath)
     {
         if (! file_exists($filepath) || ! is_readable($filepath)) {
             return array();
@@ -92,7 +92,7 @@ class ConfigPhp implements ConfigIO
     /**
      * @inheritdoc
      */
-    public function write($filepath, $conf)
+    function write($filepath, $conf)
     {
         $configStr = '<?php '. PHP_EOL;
         foreach (self::$ROOT_KEYS as $key) {
@@ -126,7 +126,7 @@ class ConfigPhp implements ConfigIO
     /**
      * @inheritdoc
      */
-    public function getExtension()
+    function getExtension()
     {
         return '.php';
     }
