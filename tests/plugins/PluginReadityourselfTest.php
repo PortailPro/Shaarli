@@ -25,8 +25,7 @@ class PluginReadityourselfTest extends PHPUnit_Framework_TestCase
      */
     function testReadityourselfLinklist()
     {
-        $conf = ConfigManager::getInstance();
-        $conf->set('plugins.READITYOUSELF_URL', 'value');
+        $GLOBALS['plugins']['READITYOUSELF_URL'] = 'value';
         $str = 'http://randomstr.com/test';
         $data = array(
             'title' => $str,
@@ -53,8 +52,7 @@ class PluginReadityourselfTest extends PHPUnit_Framework_TestCase
      */
     function testReadityourselfLinklistWithoutConfig()
     {
-        $conf = ConfigManager::getInstance();
-        $conf->set('plugins.READITYOUSELF_URL', null);
+        unset($GLOBALS['plugins']['READITYOUSELF_URL']);
         $str = 'http://randomstr.com/test';
         $data = array(
             'title' => $str,
