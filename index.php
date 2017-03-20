@@ -2,7 +2,7 @@
 /**
  * Shaarli v0.7.0 - Shaare your links...
  *
- * The personal, minimalist, super-fast, database free, bookmarking service.
+ * The personal, minimalist, super-fast, no-database Delicious clone.
  *
  * Friendly fork by the Shaarli community:
  *  - https://github.com/shaarli/Shaarli
