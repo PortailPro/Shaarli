@@ -13,6 +13,11 @@ class Updater
     protected $doneUpdates;
 
     /**
+     * @var array Shaarli's configuration array.
+     */
+    protected $config;
+
+    /**
      * @var LinkDB instance.
      */
     protected $linkDB;
@@ -31,12 +36,14 @@ class Updater
      * Object constructor.
      *
      * @param array   $doneUpdates Updates which are already done.
+     * @param array   $config      Shaarli's configuration array.
      * @param LinkDB  $linkDB      LinkDB instance.
      * @param boolean $isLoggedIn  True if the user is logged in.
      */
-    public function __construct($doneUpdates, $linkDB, $isLoggedIn)
+    public function __construct($doneUpdates, $config, $linkDB, $isLoggedIn)
     {
         $this->doneUpdates = $doneUpdates;
+        $this->config = $config;
         $this->linkDB = $linkDB;
         $this->isLoggedIn = $isLoggedIn;
 
@@ -107,21 +114,19 @@ class Updater
      */
     public function updateMethodMergeDeprecatedConfigFile()
     {
-        $conf = ConfigManager::getInstance();
+        $config_file = $this->config['config']['CONFIG_FILE'];
 
-        if (is_file($conf->get('config.DATADIR') . '/options.php')) {
-            include $conf->get('config.DATADIR') . '/options.php';
+        if (is_file($this->config['config']['DATADIR'].'/options.php')) {
+            include $this->config['config']['DATADIR'].'/options.php';
 
             // Load GLOBALS into config
-            $allowedKeys = array_merge(ConfigPhp::$ROOT_KEYS);
-            $allowedKeys[] = 'config';
             foreach ($GLOBALS as $key => $value) {
-                if (in_array($key, $allowedKeys)) {
-                    $conf->set($key, $value);
-                }
+                $this->config[$key] = $value;
             }
-            $conf->write($this->isLoggedIn);
-            unlink($conf->get('config.DATADIR').'/options.php');
+            $this->config['config']['CONFIG_FILE'] = $config_file;
+            writeConfig($this->config, $this->isLoggedIn);
+
+            unlink($this->config['config']['DATADIR'].'/options.php');
         }
 
         return true;
@@ -132,14 +137,13 @@ class Updater
      */
     public function updateMethodRenameDashTags()
     {
-        $conf = ConfigManager::getInstance();
         $linklist = $this->linkDB->filterSearch();
         foreach ($linklist as $link) {
             $link['tags'] = preg_replace('/(^| )\-/', '$1', $link['tags']);
             $link['tags'] = implode(' ', array_unique(LinkFilter::tagsStrToArray($link['tags'], true)));
             $this->linkDB[$link['linkdate']] = $link;
         }
-        $this->linkDB->savedb($conf->get('config.PAGECACHE'));
+        $this->linkDB->savedb($this->config['config']['PAGECACHE']);
         return true;
     }
 }

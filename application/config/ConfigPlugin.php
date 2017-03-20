@@ -1,8 +1,6 @@
 <?php
 /**
- * Plugin configuration helper functions.
- *
- * Note: no access to configuration files here.
+ * Functions related to configuration management.
  */
 
 /**
