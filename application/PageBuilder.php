@@ -15,20 +15,12 @@ class PageBuilder
     private $tpl;
 
     /**
-     * @var ConfigManager $conf Configuration Manager instance.
-     */
-    protected $conf;
-
-    /**
      * PageBuilder constructor.
      * $tpl is initialized at false for lazy loading.
-     *
-     * @param ConfigManager $conf Configuration Manager instance (reference).
      */
-    function __construct(&$conf)
+    function __construct()
     {
         $this->tpl = false;
-        $this->conf = $conf;
     }
 
     /**
@@ -37,21 +29,22 @@ class PageBuilder
     private function initialize()
     {
         $this->tpl = new RainTPL();
+        $conf = ConfigManager::getInstance();
 
         try {
             $version = ApplicationUtils::checkUpdate(
                 shaarli_version,
-                $this->conf->get('path.update_check'),
-                $this->conf->get('general.check_updates_interval'),
-                $this->conf->get('general.check_updates'),
+                $conf->get('path.update_check'),
+                $conf->get('general.check_updates_interval'),
+                $conf->get('general.check_updates'),
                 isLoggedIn(),
-                $this->conf->get('general.check_updates_branch')
+                $conf->get('general.check_updates_branch')
             );
             $this->tpl->assign('newVersion', escape($version));
             $this->tpl->assign('versionError', '');
 
         } catch (Exception $exc) {
-            logm($this->conf->get('path.log'), $_SERVER['REMOTE_ADDR'], $exc->getMessage());
+            logm($conf->get('path.log'), $_SERVER['REMOTE_ADDR'], $exc->getMessage());
             $this->tpl->assign('newVersion', '');
             $this->tpl->assign('versionError', escape($exc->getMessage()));
         }
@@ -70,19 +63,19 @@ class PageBuilder
         $this->tpl->assign('scripturl', index_url($_SERVER));
         $this->tpl->assign('pagetitle', 'Shaarli');
         $this->tpl->assign('privateonly', !empty($_SESSION['privateonly'])); // Show only private links?
-        if ($this->conf->exists('general.title')) {
-            $this->tpl->assign('pagetitle', $this->conf->get('general.title'));
+        if ($conf->exists('general.title')) {
+            $this->tpl->assign('pagetitle', $conf->get('general.title'));
         }
-        if ($this->conf->exists('general.header_link')) {
-            $this->tpl->assign('titleLink', $this->conf->get('general.header_link'));
+        if ($conf->exists('general.header_link')) {
+            $this->tpl->assign('titleLink', $conf->get('general.header_link'));
         }
-        if ($this->conf->exists('pagetitle')) {
-            $this->tpl->assign('pagetitle', $this->conf->get('pagetitle'));
+        if ($conf->exists('pagetitle')) {
+            $this->tpl->assign('pagetitle', $conf->get('pagetitle'));
         }
-        $this->tpl->assign('shaarlititle', $this->conf->get('title', 'Shaarli'));
-        $this->tpl->assign('openshaarli', $this->conf->get('extras.open_shaarli', false));
-        $this->tpl->assign('showatom', $this->conf->get('extras.show_atom', false));
-        $this->tpl->assign('hide_timestamps', $this->conf->get('extras.hide_timestamps', false));
+        $this->tpl->assign('shaarlititle', $conf->get('title', 'Shaarli'));
+        $this->tpl->assign('openshaarli', $conf->get('extras.open_shaarli', false));
+        $this->tpl->assign('showatom', $conf->get('extras.show_atom', false));
+        $this->tpl->assign('hide_timestamps', $conf->get('extras.hide_timestamps', false));
         if (!empty($GLOBALS['plugin_errors'])) {
             $this->tpl->assign('plugin_errors', $GLOBALS['plugin_errors']);
         }
@@ -96,6 +89,7 @@ class PageBuilder
      */
     public function assign($placeholder, $value)
     {
+        // Lazy initialization
         if ($this->tpl === false) {
             $this->initialize();
         }
@@ -111,6 +105,7 @@ class PageBuilder
      */
     public function assignAll($data)
     {
+        // Lazy initialization
         if ($this->tpl === false) {
             $this->initialize();
         }
@@ -122,7 +117,6 @@ class PageBuilder
         foreach ($data as $key => $value) {
             $this->assign($key, $value);
         }
-        return true;
     }
 
     /**
@@ -133,10 +127,10 @@ class PageBuilder
      */
     public function renderPage($page)
     {
-        if ($this->tpl === false) {
+        // Lazy initialization
+        if ($this->tpl===false) {
             $this->initialize();
         }
-
         $this->tpl->draw($page);
     }
 
