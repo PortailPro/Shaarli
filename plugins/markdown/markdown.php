@@ -8,12 +8,6 @@
 
 require_once 'Parsedown.php';
 
-/*
- * If this tag is used on a shaare, the description won't be processed by Parsedown.
- * Using a private tag so it won't appear for visitors.
- */
-define('NO_MD_TAG', '.nomarkdown');
-
 /**
  * Parse linklist descriptions.
  *
@@ -24,9 +18,6 @@ define('NO_MD_TAG', '.nomarkdown');
 function hook_markdown_render_linklist($data)
 {
     foreach ($data['links'] as &$value) {
-        if (!empty($value['tags']) && noMarkdownTag($value['tags'])) {
-            continue;
-        }
         $value['description'] = process_markdown($value['description']);
     }
 
@@ -45,26 +36,11 @@ function hook_markdown_render_daily($data)
     // Manipulate columns data
     foreach ($data['cols'] as &$value) {
         foreach ($value as &$value2) {
-            if (!empty($value2['tags']) && noMarkdownTag($value2['tags'])) {
-                continue;
-            }
             $value2['formatedDescription'] = process_markdown($value2['formatedDescription']);
         }
     }
 
     return $data;
-}
-
-/**
- * Check if noMarkdown is set in tags.
- *
- * @param string $tags tag list
- *
- * @return bool true if markdown should be disabled on this link.
- */
-function noMarkdownTag($tags)
-{
-    return strpos($tags, NO_MD_TAG) !== false;
 }
 
 /**
@@ -99,12 +75,6 @@ function hook_markdown_render_editlink($data)
 {
     // Load help HTML into a string
     $data['edit_link_plugin'][] = file_get_contents(PluginManager::$PLUGINS_PATH .'/markdown/help.html');
-
-    // Add no markdown 'meta-tag' in tag list if it was never used, for autocompletion.
-    if (! in_array(NO_MD_TAG, $data['tags'])) {
-        $data['tags'][NO_MD_TAG] = 0;
-    }
-
     return $data;
 }
 
