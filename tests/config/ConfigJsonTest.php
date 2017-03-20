@@ -23,9 +23,9 @@ class ConfigJsonTest extends PHPUnit_Framework_TestCase
     public function testRead()
     {
         $conf = $this->configIO->read('tests/utils/config/configJson.json.php');
-        $this->assertEquals('root', $conf['credentials']['login']);
-        $this->assertEquals('lala', $conf['extras']['redirector']);
-        $this->assertEquals('tests/utils/config/datastore.php', $conf['path']['datastore']);
+        $this->assertEquals('root', $conf['login']);
+        $this->assertEquals('lala', $conf['redirector']);
+        $this->assertEquals('data/datastore.php', $conf['config']['DATASTORE']);
         $this->assertEquals('1', $conf['plugins']['WALLABAG_VERSION']);
     }
 
@@ -55,14 +55,10 @@ class ConfigJsonTest extends PHPUnit_Framework_TestCase
     {
         $dataFile = 'tests/utils/config/configWrite.json.php';
         $data = array(
-            'credentials' => array(
-                'login' => 'root',
-            ),
-            'path' => array(
-                'datastore' => 'data/datastore.php',
-            ),
-            'extras' => array(
-                'redirector' => 'lala',
+            'login' => 'root',
+            'redirector' => 'lala',
+            'config' => array(
+                'DATASTORE' => 'data/datastore.php',
             ),
             'plugins' => array(
                 'WALLABAG_VERSION' => '1',
@@ -72,23 +68,19 @@ class ConfigJsonTest extends PHPUnit_Framework_TestCase
         // PHP 5.3 doesn't support json pretty print.
         if (defined('JSON_PRETTY_PRINT')) {
             $expected = '{
-    "credentials": {
-        "login": "root"
-    },
-    "path": {
-        "datastore": "data\/datastore.php"
-    },
-    "extras": {
-        "redirector": "lala"
+    "login": "root",
+    "redirector": "lala",
+    "config": {
+        "DATASTORE": "data\/datastore.php"
     },
     "plugins": {
         "WALLABAG_VERSION": "1"
     }
 }';
         } else {
-            $expected = '{"credentials":{"login":"root"},"path":{"datastore":"data\/datastore.php"},"extras":{"redirector":"lala"},"plugins":{"WALLABAG_VERSION":"1"}}';
+            $expected = '{"login":"root","redirector":"lala","config":{"DATASTORE":"data\/datastore.php"},"plugins":{"WALLABAG_VERSION":"1"}}';
         }
-        $expected = ConfigJson::getPhpHeaders() . $expected;
+        $expected = ConfigJson::$PHP_HEADER . $expected;
         $this->assertEquals($expected, file_get_contents($dataFile));
         unlink($dataFile);
     }
@@ -102,10 +94,10 @@ class ConfigJsonTest extends PHPUnit_Framework_TestCase
         $dest = 'tests/utils/config/configOverwrite.json.php';
         copy($source, $dest);
         $conf = $this->configIO->read($dest);
-        $conf['extras']['redirector'] = 'blabla';
+        $conf['redirector'] = 'blabla';
         $this->configIO->write($dest, $conf);
         $conf = $this->configIO->read($dest);
-        $this->assertEquals('blabla', $conf['extras']['redirector']);
+        $this->assertEquals('blabla', $conf['redirector']);
         unlink($dest);
     }
 
