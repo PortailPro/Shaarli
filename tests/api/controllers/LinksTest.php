@@ -188,33 +188,25 @@ class LinksTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getLinks with visibility parameter set to all
+     * Test getLinks with private attribute to 1 or true.
      */
-    public function testGetLinksVisibilityAll()
-    {
-        $env = Environment::mock(
-            [
-                'REQUEST_METHOD' => 'GET',
-                'QUERY_STRING' => 'visibility=all'
-            ]
-        );
-        $request = Request::createFromEnvironment($env);
-        $response = $this->controller->getLinks($request, new Response());
-        $this->assertEquals(200, $response->getStatusCode());
-        $data = json_decode((string)$response->getBody(), true);
-        $this->assertEquals($this->refDB->countLinks(), count($data));
-        $this->assertEquals(41, $data[0]['id']);
-        $this->assertEquals(self::NB_FIELDS_LINK, count($data[0]));
-    }
-
-    /**
-     * Test getLinks with visibility parameter set to private
-     */
-    public function testGetLinksVisibilityPrivate()
+    public function testGetLinksPrivate()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'QUERY_STRING' => 'visibility=private'
+            'QUERY_STRING' => 'private=true'
+        ]);
+        $request = Request::createFromEnvironment($env);
+        $response = $this->controller->getLinks($request, new Response());
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode((string) $response->getBody(), true);
+        $this->assertEquals($this->refDB->countPrivateLinks(), count($data));
+        $this->assertEquals(6, $data[0]['id']);
+        $this->assertEquals(self::NB_FIELDS_LINK, count($data[0]));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'QUERY_STRING' => 'private=1'
         ]);
         $request = Request::createFromEnvironment($env);
         $response = $this->controller->getLinks($request, new Response());
@@ -226,21 +218,35 @@ class LinksTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getLinks with visibility parameter set to public
+     * Test getLinks with private attribute to false or 0
      */
-    public function testGetLinksVisibilityPublic()
+    public function testGetLinksNotPrivate()
     {
         $env = Environment::mock(
             [
                 'REQUEST_METHOD' => 'GET',
-                'QUERY_STRING' => 'visibility=public'
+                'QUERY_STRING' => 'private=0'
             ]
         );
         $request = Request::createFromEnvironment($env);
         $response = $this->controller->getLinks($request, new Response());
         $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode((string)$response->getBody(), true);
-        $this->assertEquals($this->refDB->countPublicLinks(), count($data));
+        $this->assertEquals($this->refDB->countLinks(), count($data));
+        $this->assertEquals(41, $data[0]['id']);
+        $this->assertEquals(self::NB_FIELDS_LINK, count($data[0]));
+
+        $env = Environment::mock(
+            [
+                'REQUEST_METHOD' => 'GET',
+                'QUERY_STRING' => 'private=false'
+            ]
+        );
+        $request = Request::createFromEnvironment($env);
+        $response = $this->controller->getLinks($request, new Response());
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode((string)$response->getBody(), true);
+        $this->assertEquals($this->refDB->countLinks(), count($data));
         $this->assertEquals(41, $data[0]['id']);
         $this->assertEquals(self::NB_FIELDS_LINK, count($data[0]));
     }
