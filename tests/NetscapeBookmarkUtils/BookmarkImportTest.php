@@ -2,7 +2,6 @@
 
 require_once 'application/NetscapeBookmarkUtils.php';
 
-use Shaarli\Config\ConfigManager;
 
 /**
  * Utility function to load a file's metadata in a $_FILES-like array
