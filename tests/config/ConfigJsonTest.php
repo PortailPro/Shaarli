@@ -24,8 +24,8 @@ class ConfigJsonTest extends PHPUnit_Framework_TestCase
     {
         $conf = $this->configIO->read('tests/utils/config/configJson.json.php');
         $this->assertEquals('root', $conf['credentials']['login']);
-        $this->assertEquals('lala', $conf['redirector']['url']);
-        $this->assertEquals('tests/utils/config/datastore.php', $conf['resource']['datastore']);
+        $this->assertEquals('lala', $conf['extras']['redirector']);
+        $this->assertEquals('tests/utils/config/datastore.php', $conf['path']['datastore']);
         $this->assertEquals('1', $conf['plugins']['WALLABAG_VERSION']);
     }
 
@@ -58,11 +58,11 @@ class ConfigJsonTest extends PHPUnit_Framework_TestCase
             'credentials' => array(
                 'login' => 'root',
             ),
-            'resource' => array(
+            'path' => array(
                 'datastore' => 'data/datastore.php',
             ),
-            'redirector' => array(
-                'url' => 'lala',
+            'extras' => array(
+                'redirector' => 'lala',
             ),
             'plugins' => array(
                 'WALLABAG_VERSION' => '1',
@@ -75,18 +75,18 @@ class ConfigJsonTest extends PHPUnit_Framework_TestCase
     "credentials": {
         "login": "root"
     },
-    "resource": {
+    "path": {
         "datastore": "data\/datastore.php"
     },
-    "redirector": {
-        "url": "lala"
+    "extras": {
+        "redirector": "lala"
     },
     "plugins": {
         "WALLABAG_VERSION": "1"
     }
 }';
         } else {
-            $expected = '{"credentials":{"login":"root"},"resource":{"datastore":"data\/datastore.php"},"redirector":{"url":"lala"},"plugins":{"WALLABAG_VERSION":"1"}}';
+            $expected = '{"credentials":{"login":"root"},"path":{"datastore":"data\/datastore.php"},"extras":{"redirector":"lala"},"plugins":{"WALLABAG_VERSION":"1"}}';
         }
         $expected = ConfigJson::getPhpHeaders() . $expected;
         $this->assertEquals($expected, file_get_contents($dataFile));
@@ -102,10 +102,10 @@ class ConfigJsonTest extends PHPUnit_Framework_TestCase
         $dest = 'tests/utils/config/configOverwrite.json.php';
         copy($source, $dest);
         $conf = $this->configIO->read($dest);
-        $conf['redirector']['url'] = 'blabla';
+        $conf['extras']['redirector'] = 'blabla';
         $this->configIO->write($dest, $conf);
         $conf = $this->configIO->read($dest);
-        $this->assertEquals('blabla', $conf['redirector']['url']);
+        $this->assertEquals('blabla', $conf['extras']['redirector']);
         unlink($dest);
     }
 
