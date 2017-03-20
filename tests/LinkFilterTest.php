@@ -27,7 +27,7 @@ class LinkFilterTest extends PHPUnit_Framework_TestCase
     public function testFilter()
     {
         $this->assertEquals(
-            7,
+            6,
             count(self::$linkFilter->filter('', ''))
         );
 
@@ -222,7 +222,7 @@ class LinkFilterTest extends PHPUnit_Framework_TestCase
         );
         
         $this->assertEquals(
-            3,
+            2,
             count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, '"free software"'))
         );        
     }
@@ -250,40 +250,8 @@ class LinkFilterTest extends PHPUnit_Framework_TestCase
     public function testFilterFullTextMixed()
     {
         $this->assertEquals(
-            3,
-            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, 'free software'))
-        );
-    }
-
-    /**
-     * Full-text search - test exclusion with '-'.
-     */
-    public function testExcludeSearch()
-    {
-        $this->assertEquals(
-            1,
-            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, 'free -software'))
-        );
-
-        $this->assertEquals(
-            7,
-            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, '-software'))
-        );
-    }
-
-    /**
-     * Full-text search - test AND, exact terms and exclusion combined.
-     */
-    public function testMultiSearch()
-    {
-        $this->assertEquals(
             2,
-            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, '"Free Software " stallman "read this"'))
-        );
-
-        $this->assertEquals(
-            1,
-            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, '"free software " stallman "read this" -beard'))
+            count(self::$linkFilter->filter(LinkFilter::$FILTER_TEXT, 'free software'))
         );
     }
 
@@ -298,7 +266,7 @@ class LinkFilterTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            6,
+            5,
             count(self::$linkFilter->filter(LinkFilter::$FILTER_TAG, '-free'))
         );
     }
