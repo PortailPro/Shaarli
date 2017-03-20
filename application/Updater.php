@@ -137,7 +137,7 @@ class Updater
      */
     public function updateMethodRenameDashTags()
     {
-        $linklist = $this->linkDB->filterSearch();
+        $linklist = $this->linkDB->filter();
         foreach ($linklist as $link) {
             $link['tags'] = preg_replace('/(^| )\-/', '$1', $link['tags']);
             $link['tags'] = implode(' ', array_unique(LinkFilter::tagsStrToArray($link['tags'], true)));
