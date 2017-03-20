@@ -17,7 +17,6 @@ class ConfigJson implements ConfigIO
         }
         $data = file_get_contents($filepath);
         $data = str_replace(self::getPhpHeaders(), '', $data);
-        $data = str_replace(self::getPhpSuffix(), '', $data);
         $data = json_decode($data, true);
         if ($data === null) {
             $error = json_last_error();
@@ -33,7 +32,7 @@ class ConfigJson implements ConfigIO
     {
         // JSON_PRETTY_PRINT is available from PHP 5.4.
         $print = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 0;
-        $data = self::getPhpHeaders() . json_encode($conf, $print) . self::getPhpSuffix();
+        $data = self::getPhpHeaders() . json_encode($conf, $print);
         if (!file_put_contents($filepath, $data)) {
             throw new IOException(
                 $filepath,
@@ -62,17 +61,5 @@ class ConfigJson implements ConfigIO
     public static function getPhpHeaders()
     {
         return '<?php /*'. PHP_EOL;
-    }
-
-    /**
-     * Get PHP comment closing tags.
-     *
-     * Static method for consistency with getPhpHeaders.
-     *
-     * @return string PHP comment closing.
-     */
-    public static function getPhpSuffix()
-    {
-        return PHP_EOL . '*/ ?>';
     }
 }
