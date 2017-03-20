@@ -15,7 +15,8 @@ class ConfigManagerTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->conf = new ConfigManager('tests/utils/config/configJson');
+        ConfigManager::$CONFIG_FILE = 'tests/utils/config/configJson';
+        $this->conf = ConfigManager::reset();
     }
 
     /**
@@ -53,10 +54,10 @@ class ConfigManagerTest extends PHPUnit_Framework_TestCase
         $this->conf->set('paramArray', array('foo' => 'bar'));
         $this->conf->set('paramNull', null);
 
-        $this->conf->setConfigFile('tests/utils/config/configTmp');
+        ConfigManager::$CONFIG_FILE = 'tests/utils/config/configTmp';
         $this->conf->write(true);
         $this->conf->reload();
-        unlink($this->conf->getConfigFileExt());
+        unlink($this->conf->getConfigFile());
 
         $this->assertEquals(42, $this->conf->get('paramInt'));
         $this->assertEquals('value1', $this->conf->get('paramString'));
@@ -72,10 +73,10 @@ class ConfigManagerTest extends PHPUnit_Framework_TestCase
     {
         $this->conf->set('foo.bar.key.stuff', 'testSetWriteGetNested');
 
-        $this->conf->setConfigFile('tests/utils/config/configTmp');
+        ConfigManager::$CONFIG_FILE = 'tests/utils/config/configTmp';
         $this->conf->write(true);
         $this->conf->reload();
-        unlink($this->conf->getConfigFileExt());
+        unlink($this->conf->getConfigFile());
 
         $this->assertEquals('testSetWriteGetNested', $this->conf->get('foo.bar.key.stuff'));
     }
@@ -109,8 +110,8 @@ class ConfigManagerTest extends PHPUnit_Framework_TestCase
      */
     public function testWriteMissingParameter()
     {
-        $this->conf->setConfigFile('tests/utils/config/configTmp');
-        $this->assertFalse(file_exists($this->conf->getConfigFileExt()));
+        ConfigManager::$CONFIG_FILE = 'tests/utils/config/configTmp';
+        $this->assertFalse(file_exists($this->conf->getConfigFile()));
         $this->conf->reload();
 
         $this->conf->write(true);
@@ -150,9 +151,10 @@ class ConfigManagerTest extends PHPUnit_Framework_TestCase
      */
     public function testReset()
     {
-        $confIO = $this->conf->getConfigIO();
-        $this->conf->reset();
-        $this->assertFalse($confIO === $this->conf->getConfigIO());
+        $conf = $this->conf;
+        $this->assertTrue($conf === ConfigManager::getInstance());
+        $this->assertFalse($conf === $this->conf->reset());
+        $this->assertFalse($conf === ConfigManager::getInstance());
     }
 
     /**
@@ -160,11 +162,11 @@ class ConfigManagerTest extends PHPUnit_Framework_TestCase
      */
     public function testReload()
     {
-        $this->conf->setConfigFile('tests/utils/config/configTmp');
+        ConfigManager::$CONFIG_FILE = 'tests/utils/config/configTmp';
         $newConf = ConfigJson::getPhpHeaders() . '{ "key": "value" }';
-        file_put_contents($this->conf->getConfigFileExt(), $newConf);
+        file_put_contents($this->conf->getConfigFile(), $newConf);
         $this->conf->reload();
-        unlink($this->conf->getConfigFileExt());
+        unlink($this->conf->getConfigFile());
         // Previous conf no longer exists, and new values have been loaded.
         $this->assertFalse($this->conf->exists('credentials.login'));
         $this->assertEquals('value', $this->conf->get('key'));
