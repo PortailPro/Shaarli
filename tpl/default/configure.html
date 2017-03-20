@@ -25,15 +25,14 @@
         <td>
           <select name="theme" id="theme">
             {loop="$theme_available"}
-              <option value="{$value}"
-                {if="$value===$theme"}
-                  selected="selected"
-                {/if}
-              >
-                {$value|ucfirst}
-              </option>
+              {if="$value===$theme"}
+                <option selected value="{$value}">{$value|ucfirst}</option>
+              {else}
+                <option value="{$value}">{$value|ucfirst}</option>
+              {/if}
             {/loop}
           </select>
+          <label for="theme">(default value is: Default)</label>
         </td>
       </tr>
 
