@@ -1,7 +1,9 @@
 <?php
 namespace Shaarli\Config;
 
-use Shaarli\Config\Exception\PluginConfigOrderException;
+/**
+ * Config' tests
+ */
 
 require_once 'application/config/ConfigPlugin.php';
 
@@ -39,7 +41,7 @@ class ConfigPluginTest extends \PHPUnit_Framework_TestCase
     /**
      * Test save_plugin_config with invalid data.
      *
-     * @expectedException Shaarli\Config\Exception\PluginConfigOrderException
+     * @expectedException Shaarli\Config\PluginConfigOrderException
      */
     public function testSavePluginConfigInvalid()
     {
