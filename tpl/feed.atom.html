@@ -6,9 +6,11 @@
     <updated>{$last_update}</updated>
   {/if}
   <link rel="self" href="{$self_link}#" />
-  {loop="$plugins_feed_header"}
-    {$value}
-  {/loop}
+  {if="!empty($pubsubhub_url)"}
+    <!-- PubSubHubbub Discovery -->
+    <link rel="hub" href="{$pubsubhub_url}#" />
+    <!-- End Of PubSubHubbub Discovery -->
+  {/if}
   <author>
     <name>{$index_url}</name>
     <uri>{$index_url}</uri>
@@ -31,9 +33,6 @@
       <content type="html" xml:lang="{$language}"><![CDATA[{$value.description}]]></content>
       {loop="$value.taglist"}
         <category scheme="{$index_url}?searchtags=" term="{$value|strtolower}" label="{$value}" />
-      {/loop}
-      {loop="$value.feed_plugins"}
-        {$value}
       {/loop}
     </entry>
   {/loop}
