@@ -6,22 +6,24 @@
 
 require_once 'WallabagInstance.php';
 
+$conf = ConfigManager::getInstance();
 $wallabagUrl = $conf->get('plugins.WALLABAG_URL');
 if (empty($wallabagUrl)) {
     $GLOBALS['plugin_errors'][] = 'Wallabag plugin error: '.
-        'Please define the "WALLABAG_URL" setting in the plugin administration page.';
+        'Please define "$GLOBALS[\'plugins\'][\'WALLABAG_URL\']" '.
+        'in "plugins/wallabag/config.php" or in your Shaarli config.php file.';
 }
 
 /**
  * Add wallabag icon to link_plugin when rendering linklist.
  *
- * @param mixed         $data Linklist data.
- * @param ConfigManager $conf Configuration Manager instance.
+ * @param mixed $data - linklist data.
  *
  * @return mixed - linklist data with wallabag plugin.
  */
-function hook_wallabag_render_linklist($data, $conf)
+function hook_wallabag_render_linklist($data)
 {
+    $conf = ConfigManager::getInstance();
     $wallabagUrl = $conf->get('plugins.WALLABAG_URL');
     if (empty($wallabagUrl)) {
         return $data;

@@ -8,22 +8,24 @@
 // it seems kinda dead.
 // Not tested.
 
+$conf = ConfigManager::getInstance();
 $riyUrl = $conf->get('plugins.READITYOUSELF_URL');
 if (empty($riyUrl)) {
     $GLOBALS['plugin_errors'][] = 'Readityourself plugin error: '.
-        'Please define the "READITYOUSELF_URL" setting in the plugin administration page.';
+        'Please define "$GLOBALS[\'plugins\'][\'READITYOUSELF_URL\']" '.
+        'in "plugins/readityourself/config.php" or in your Shaarli config.php file.';
 }
 
 /**
  * Add readityourself icon to link_plugin when rendering linklist.
  *
- * @param mixed         $data Linklist data.
- * @param ConfigManager $conf Configuration Manager instance.
+ * @param mixed $data - linklist data.
  *
  * @return mixed - linklist data with readityourself plugin.
  */
-function hook_readityourself_render_linklist($data, $conf)
+function hook_readityourself_render_linklist($data)
 {
+    $conf = ConfigManager::getInstance();
     $riyUrl = $conf->get('plugins.READITYOUSELF_URL');
     if (empty($riyUrl)) {
         return $data;
