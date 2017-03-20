@@ -22,8 +22,7 @@
           <link>{$value.url}</link>
         {/if}
         {if="$show_dates"}
-          <pubDate>{$value.pub_iso_date}</pubDate>
-          <atom:modified>{$value.up_iso_date}</atom:modified>
+          <pubDate>{$value.iso_date}</pubDate>
         {/if}
         <description><![CDATA[{$value.description}]]></description>
         {loop="$value.taglist"}
