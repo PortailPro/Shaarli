@@ -9,15 +9,14 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 
 /**
- * Class GetLinksTest
+ * Class LinksTest
  *
- * Test get Link list REST API service.
- *
- * @see http://shaarli.github.io/api-documentation/#links-links-collection-get
+ * Test Links REST API services.
+ * Note that api call results are tightly related to data contained in ReferenceLinkDB.
  *
  * @package Shaarli\Api\Controllers
  */
-class GetLinksTest extends \PHPUnit_Framework_TestCase
+class LinksTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string datastore to test write operations
@@ -54,7 +53,7 @@ class GetLinksTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->conf = new \ConfigManager('tests/utils/config/configJson');
+        $this->conf = new \ConfigManager('tests/utils/config/configJson.json.php');
         $this->refDB = new \ReferenceLinkDB();
         $this->refDB->write(self::$testDatastore);
 
@@ -101,7 +100,7 @@ class GetLinksTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($order[$cpt++], $link['id']);
         }
 
-        // Check first element fields
+        // Check first element fields\
         $first = $data[0];
         $this->assertEquals('http://domain.tld/?WDWyig', $first['url']);
         $this->assertEquals('WDWyig', $first['shorturl']);
