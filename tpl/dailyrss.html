@@ -2,7 +2,7 @@
     <title>{$title} - {function="strftime('%A %e %B %Y', $daydate)"}</title>
     <guid>{$absurl}</guid>
     <link>{$absurl}</link>
-    <pubDate>{$rssdate}</pubDate>
+    <pubDate>{$rfc822date}</pubDate>
     <description><![CDATA[
         {loop="links"}
         	<h3><a href="{$value.url}">{$value.title}</a></h3>
