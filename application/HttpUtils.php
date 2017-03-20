@@ -106,21 +106,11 @@ function server_url($server)
     // Shaarli is served behind a proxy
     if (isset($server['HTTP_X_FORWARDED_PROTO'])) {
         // Keep forwarded scheme
-        if (strpos($server['HTTP_X_FORWARDED_PROTO'], ',') !== false) {
-            $schemes = explode(',', $server['HTTP_X_FORWARDED_PROTO']);
-            $scheme = trim($schemes[0]);
-        } else {
-            $scheme = $server['HTTP_X_FORWARDED_PROTO'];
-        }
+        $scheme = $server['HTTP_X_FORWARDED_PROTO'];
 
         if (isset($server['HTTP_X_FORWARDED_PORT'])) {
             // Keep forwarded port
-            if (strpos($server['HTTP_X_FORWARDED_PORT'], ',') !== false) {
-                $ports = explode(',', $server['HTTP_X_FORWARDED_PORT']);
-                $port = ':' . trim($ports[0]);
-            } else {
-                $port = ':' . $server['HTTP_X_FORWARDED_PORT'];
-            }
+            $port = ':'.$server['HTTP_X_FORWARDED_PORT'];
         }
 
         return $scheme.'://'.$server['SERVER_NAME'].$port;
